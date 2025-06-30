@@ -603,6 +603,26 @@ app.get('/api/export-csv', async (req, res) => {
   }
 });
 
+// Self-ping to prevent Render from sleeping (only in production)
+function keepAlive() {
+  if (process.env.NODE_ENV === 'production' && process.env.RENDER_EXTERNAL_URL) {
+    const https = require('https');
+    const http = require('http');
+    
+    const url = process.env.RENDER_EXTERNAL_URL;
+    const isHttps = url.startsWith('https');
+    const client = isHttps ? https : http;
+    
+    setInterval(() => {
+      client.get(url, (res) => {
+        console.log(`Keep-alive ping: ${res.statusCode}`);
+      }).on('error', (err) => {
+        console.log('Keep-alive ping failed:', err.message);
+      });
+    }, 14 * 60 * 1000); // Ping every 14 minutes
+  }
+}
+
 // Initialize and start server
 initializeDataFiles();
 
@@ -610,4 +630,7 @@ app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
   console.log('Access user page: http://localhost:3000');
   console.log('Access admin page: http://localhost:3000/admin');
+  
+  // Start keep-alive pings
+  keepAlive();
 });
