@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Library - Student Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .books-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .book-card {
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .book-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .book-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .book-author {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .book-stock {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+
+        .stock-available {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .stock-unavailable {
+            color: #f44336;
+            font-weight: bold;
+        }
+
+        .request-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+
+        .request-btn:hover {
+            background: #45a049;
+        }
+
+        .request-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            top: 15px;
+            right: 20px;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .submit-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background: #45a049;
+        }
+
+        .admin-link {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #2196F3;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .admin-link:hover {
+            background: #1976D2;
+        }
+
+        .message {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .books-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="/admin" class="admin-link">Admin Panel</a>
+    
+    <div class="container">
+        <div class="header">
+            <h1>College Library System</h1>
+            <p>Browse and request books from our collection</p>
+        </div>
+
+        <div class="main-content">
+            <div id="message" class="message"></div>
+            
+            <div class="books-section">
+                <h2 class="section-title">Available Books</h2>
+                <div id="booksGrid" class="books-grid">
+                    <!-- Books will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Request Modal -->
+    <div id="requestModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Request Book</h2>
+            <form id="requestForm">
+                <input type="hidden" id="bookId" name="bookId">
+                <div class="form-group">
+                    <label>Book Title:</label>
+                    <input type="text" id="bookTitle" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="userName">Your Name:</label>
+                    <input type="text" id="userName" name="userName" required>
+                </div>
+                <div class="form-group">
+                    <label for="userEmail">Your Email:</label>
+                    <input type="email" id="userEmail" name="userEmail" required>
+                </div>
+                <button type="submit" class="submit-btn">Submit Request</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let books = [];
+
+        // Load books on page load
+        document.addEventListener('DOMContentLoaded', loadBooks);
+
+        async function loadBooks() {
+            try {
+                const response = await fetch('/api/books');
+                books = await response.json();
+                displayBooks();
+            } catch (error) {
+                showMessage('Failed to load books', 'error');
+            }
+        }
+
+        function displayBooks() {
+            const booksGrid = document.getElementById('booksGrid');
+            booksGrid.innerHTML = '';
+
+            books.forEach(book => {
+                const bookCard = document.createElement('div');
+                bookCard.className = 'book-card';
+                
+                const isAvailable = book.available > 0;
+                
+                bookCard.innerHTML = `
+                    <img src="${book.image}" alt="${book.title}" class="book-image" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80'">
+                    <div class="book-title">${book.title}</div>
+                    <div class="book-author">by ${book.author}</div>
+                    <div class="book-stock">
+                        <span>Total: ${book.stock}</span>
+                        <span class="${isAvailable ? 'stock-available' : 'stock-unavailable'}">
+                            Available: ${book.available}
+                        </span>
+                    </div>
+                    <button class="request-btn" ${!isAvailable ? 'disabled' : ''} 
+                            onclick="openRequestModal(${book.id}, '${book.title}')">
+                        ${isAvailable ? 'Request Book' : 'Out of Stock'}
+                    </button>
+                `;
+                
+                booksGrid.appendChild(bookCard);
+            });
+        }
+
+        function openRequestModal(bookId, bookTitle) {
+            document.getElementById('bookId').value = bookId;
+            document.getElementById('bookTitle').value = bookTitle;
+            document.getElementById('requestModal').style.display = 'block';
+        }
+
+        // Close modal
+        document.querySelector('.close').onclick = function() {
+            document.getElementById('requestModal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('requestModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('requestForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const requestData = {
+                bookId: formData.get('bookId'),
+                userName: formData.get('userName'),
+                userEmail: formData.get('userEmail')
+            };
+
+            try {
+                const response = await fetch('/api/request-book', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestData)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showMessage(result.message, 'success');
+                    document.getElementById('requestModal').style.display = 'none';
+                    this.reset();
+                    loadBooks(); // Refresh books
+                } else {
+                    showMessage(result.error, 'error');
+                }
+            } catch (error) {
+                showMessage('Failed to submit request', 'error');
+            }
+        });
+
+        function showMessage(text, type) {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = text;
+            messageEl.className = `message ${type}`;
+            messageEl.style.display = 'block';
+            
+            setTimeout(() => {
+                messageEl.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

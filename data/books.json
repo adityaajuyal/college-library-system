@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "title": "JavaScript Fundamentals",
+    "author": "John Doe",
+    "stock": 5,
+    "available": 4
+  },
+  {
+    "id": 2,
+    "title": "Web Development Guide",
+    "author": "Jane Smith",
+    "stock": 3,
+    "available": 3
+  },
+  {
+    "id": 3,
+    "title": "Database Systems",
+    "author": "Bob Johnson",
+    "stock": 4,
+    "available": 4
+  }
+]

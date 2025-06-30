@@ -1,0 +1,201 @@
+[
+  {
+    "id": 1751017216559,
+    "bookId": 1,
+    "bookTitle": "JavaScript Fundamentals",
+    "userName": "Aditya Juyal",
+    "userEmail": "adityajuyal@gmail.com",
+    "status": "approved",
+    "requestDate": "2025-06-27T09:40:16.559Z",
+    "approvedDate": "2025-06-27T09:43:25.770Z"
+  },
+  {
+    "id": 1751017218464,
+    "bookId": 1,
+    "bookTitle": "JavaScript Fundamentals",
+    "userName": "Aditya Juyal",
+    "userEmail": "adityajuyal@gmail.com",
+    "status": "pending",
+    "requestDate": "2025-06-27T09:40:18.464Z"
+  },
+  {
+    "id": 1751017219947,
+    "bookId": 1,
+    "bookTitle": "JavaScript Fundamentals",
+    "userName": "Aditya Juyal",
+    "userEmail": "adityajuyal@gmail.com",
+    "status": "pending",
+    "requestDate": "2025-06-27T09:40:19.947Z"
+  },
+  {
+    "id": 1751017220102,
+    "bookId": 1,
+    "bookTitle": "JavaScript Fundamentals",
+    "userName": "Aditya Juyal",
+    "userEmail": "adityajuyal@gmail.com",
+    "status": "pending",
+    "requestDate": "2025-06-27T09:40:20.102Z"
+  },
+  {
+    "id": 1751017220269,
+    "bookId": 1,
+    "bookTitle": "JavaScript Fundamentals",
+    "userName": "Aditya Juyal",
+    "userEmail": "adityajuyal@gmail.com",
+    "status": "pending",
+    "requestDate": "2025-06-27T09:40:20.269Z"
+  },
+  {
+    "id": 1751017220410,
+    "bookId": 1,
+    "bookTitle": "JavaScript Fundamentals",
+    "userName": "Aditya Juyal",
+    "userEmail": "adityajuyal@gmail.com",
+    "status": "pending",
+    "requestDate": "2025-06-27T09:40:20.410Z"
+  },
+  {
+    "id": 1751017220581,
+    "bookId": 1,
+    "bookTitle": "JavaScript Fundamentals",
+    "userName": "Aditya Juyal",
+    "userEmail": "adityajuyal@gmail.com",
+    "status": "pending",
+    "requestDate": "2025-06-27T09:40:20.581Z"
+  },
+  {
+    "id": 1751017220806,
+    "bookId": 1,
+    "bookTitle": "JavaScript Fundamentals",
+    "userName": "Aditya Juyal",
+    "userEmail": "adityajuyal@gmail.com",
+    "status": "pending",
+    "requestDate": "2025-06-27T09:40:20.806Z"
+  },
+  {
+    "id": 1751017221973,
+    "bookId": 1,
+    "bookTitle": "JavaScript Fundamentals",
+    "userName": "Aditya Juyal",
+    "userEmail": "adityajuyal@gmail.com",
+    "status": "pending",
+    "requestDate": "2025-06-27T09:40:21.973Z"
+  },
+  {
+    "id": 1751017222147,
+    "bookId": 1,
+    "bookTitle": "JavaScript Fundamentals",
+    "userName": "Aditya Juyal",
+    "userEmail": "adityajuyal@gmail.com",
+    "status": "pending",
+    "requestDate": "2025-06-27T09:40:22.147Z"
+  },
+  {
+    "id": 1751017222330,
+    "bookId": 1,
+    "bookTitle": "JavaScript Fundamentals",
+    "userName": "Aditya Juyal",
+    "userEmail": "adityajuyal@gmail.com",
+    "status": "pending",
+    "requestDate": "2025-06-27T09:40:22.330Z"
+  },
+  {
+    "id": 1751017222547,
+    "bookId": 1,
+    "bookTitle": "JavaScript Fundamentals",
+    "userName": "Aditya Juyal",
+    "userEmail": "adityajuyal@gmail.com",
+    "status": "pending",
+    "requestDate": "2025-06-27T09:40:22.547Z"
+  },
+  {
+    "id": 1751017378049,
+    "bookId": 2,
+    "bookTitle": "Web Development Guide",
+    "userName": "aditya",
+    "userEmail": "adityajuyal@gmail.com",
+    "status": "pending",
+    "requestDate": "2025-06-27T09:42:58.049Z"
+  },
+  {
+    "id": 1751017378620,
+    "bookId": 2,
+    "bookTitle": "Web Development Guide",
+    "userName": "aditya",
+    "userEmail": "adityajuyal@gmail.com",
+    "status": "pending",
+    "requestDate": "2025-06-27T09:42:58.620Z"
+  },
+  {
+    "id": 1751017378774,
+    "bookId": 2,
+    "bookTitle": "Web Development Guide",
+    "userName": "aditya",
+    "userEmail": "adityajuyal@gmail.com",
+    "status": "pending",
+    "requestDate": "2025-06-27T09:42:58.774Z"
+  },
+  {
+    "id": 1751017378936,
+    "bookId": 2,
+    "bookTitle": "Web Development Guide",
+    "userName": "aditya",
+    "userEmail": "adityajuyal@gmail.com",
+    "status": "pending",
+    "requestDate": "2025-06-27T09:42:58.936Z"
+  },
+  {
+    "id": 1751017379082,
+    "bookId": 2,
+    "bookTitle": "Web Development Guide",
+    "userName": "aditya",
+    "userEmail": "adityajuyal@gmail.com",
+    "status": "pending",
+    "requestDate": "2025-06-27T09:42:59.082Z"
+  },
+  {
+    "id": 1751017379301,
+    "bookId": 2,
+    "bookTitle": "Web Development Guide",
+    "userName": "aditya",
+    "userEmail": "adityajuyal@gmail.com",
+    "status": "pending",
+    "requestDate": "2025-06-27T09:42:59.301Z"
+  },
+  {
+    "id": 1751017381542,
+    "bookId": 2,
+    "bookTitle": "Web Development Guide",
+    "userName": "aditya",
+    "userEmail": "adityajuyal@gmail.com",
+    "status": "pending",
+    "requestDate": "2025-06-27T09:43:01.542Z"
+  },
+  {
+    "id": 1751017384387,
+    "bookId": 2,
+    "bookTitle": "Web Development Guide",
+    "userName": "aditya",
+    "userEmail": "adityajuyal@gmail.com",
+    "status": "pending",
+    "requestDate": "2025-06-27T09:43:04.387Z"
+  },
+  {
+    "id": 1751017384547,
+    "bookId": 2,
+    "bookTitle": "Web Development Guide",
+    "userName": "aditya",
+    "userEmail": "adityajuyal@gmail.com",
+    "status": "pending",
+    "requestDate": "2025-06-27T09:43:04.547Z"
+  },
+  {
+    "id": 1751017384772,
+    "bookId": 2,
+    "bookTitle": "Web Development Guide",
+    "userName": "aditya",
+    "userEmail": "adityajuyal@gmail.com",
+    "status": "pending",
+    "requestDate": "2025-06-27T09:43:04.772Z"
+  }
+]
