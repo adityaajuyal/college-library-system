@@ -13,10 +13,10 @@ jobs:
     steps:
     - name: Ping Render Service
       run: |
-        # Replace YOUR_RENDER_URL with your actual Render URL
-        curl -f https://your-app-name.onrender.com || echo "Service might be starting up"
+        # Ping your Sangrachna's Kitabghar site
+        curl -f https://college-library-system.onrender.com || echo "Service might be starting up"
         
     - name: Wait and ping again
       run: |
         sleep 30
-        curl -f https://your-app-name.onrender.com || echo "Second ping completed"
+        curl -f https://college-library-system.onrender.com || echo "Second ping completed"
