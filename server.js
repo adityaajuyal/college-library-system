@@ -416,6 +416,65 @@ app.post('/api/approve-request', async (req, res) => {
   }
 });
 
+// Admin reject request
+app.post('/api/reject-request', async (req, res) => {
+  try {
+    const { requestId } = req.body;
+    const requests = await readRequests();
+    
+    const requestIndex = requests.findIndex(r => r.id === parseInt(requestId));
+    if (requestIndex === -1) {
+      return res.status(404).json({ error: 'Request not found' });
+    }
+    
+    const request = requests[requestIndex];
+    
+    // Send rejection email to student
+    try {
+      const rejectionMailOptions = {
+        from: ADMIN_EMAIL,
+        to: request.userEmail,
+        subject: 'Book Request Update - College Library',
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #f44336;">Book Request Update 📚</h2>
+            <p>Dear ${request.userName},</p>
+            <p>We regret to inform you that your book request could not be approved at this time.</p>
+            <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              <h3 style="margin-top: 0; color: #333;">Request Details</h3>
+              <p><strong>Title:</strong> ${request.bookTitle}</p>
+              <p><strong>Request Date:</strong> ${new Date(request.requestDate).toLocaleDateString()}</p>
+            </div>
+            <p>This could be due to:</p>
+            <ul>
+              <li>Book currently unavailable</li>
+              <li>High demand for this book</li>
+              <li>Other administrative reasons</li>
+            </ul>
+            <p>You may request the book again later or contact the library for more information.</p>
+            <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;">
+            <p style="color: #888; font-size: 0.8em;">College Library Management System</p>
+          </div>
+        `
+      };
+      
+      await transporter.sendMail(rejectionMailOptions);
+    } catch (emailError) {
+      console.error('Failed to send rejection email:', emailError);
+      // Don't fail the rejection if email fails
+    }
+    
+    // Remove the request from the array
+    requests.splice(requestIndex, 1);
+    await writeRequests(requests);
+    
+    res.json({ message: 'Request rejected and removed successfully!' });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Failed to reject request' });
+  }
+});
+
 // Admin add stock
 app.post('/api/add-stock', async (req, res) => {
   try {

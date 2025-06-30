@@ -681,7 +681,7 @@
                 
                 const statusClass = request.status === 'pending' ? 'pending' : 'approved';
                 const actionButton = request.status === 'pending' 
-                    ? `<button class="btn btn-success" onclick="approveRequest(${request.id})">Approve</button>`
+                    ? `<button class="btn btn-success" onclick="approveRequest(${request.id})" style="margin-right: 5px;">Approve</button><button class="btn btn-danger" onclick="rejectRequest(${request.id})">Reject</button>`
                     : `<span class="status approved">Approved</span>`;
 
                 row.innerHTML = `
@@ -777,6 +777,35 @@
                 }
             } catch (error) {
                 showMessage('Failed to approve request', 'error');
+            }
+        }
+
+        async function rejectRequest(requestId) {
+            // Confirm before rejecting
+            if (!confirm('Are you sure you want to reject this book request?\n\nThe request will be permanently removed and the student will be notified.')) {
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/reject-request', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ requestId })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showMessage(result.message, 'success');
+                    loadRequests();
+                    loadBooks();
+                } else {
+                    showMessage(result.error, 'error');
+                }
+            } catch (error) {
+                showMessage('Failed to reject request', 'error');
             }
         }
 
