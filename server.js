@@ -464,9 +464,9 @@ app.post('/api/add-book', async (req, res) => {
 });
 
 // Generate CSV report of issued books
-app.get('/api/export-csv', (req, res) => {
+app.get('/api/export-csv', async (req, res) => {
   try {
-    const requests = readRequests();
+    const requests = await getAllRequests();
     const approvedRequests = requests.filter(r => r.status === 'approved');
     
     // CSV header
