@@ -19,4 +19,4 @@ jobs:
     - name: Wait and ping again
       run: |
         sleep 30
-        curl -f https://your-app-name.onrender.com || echo "Second ping completed"
+        curl -f https://https://college-library-system.onrender.com || echo "Second ping completed"
