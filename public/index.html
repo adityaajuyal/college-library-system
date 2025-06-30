@@ -428,8 +428,11 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="issueDate">Preferred Issue Date:</label>
-                    <input type="date" id="issueDate" name="issueDate" required>
+                    <label for="dueDate">Preferred Due Date (within 2 weeks):</label>
+                    <input type="date" id="dueDate" name="dueDate" required>
+                    <small style="color: #666; font-size: 0.9em; margin-top: 5px; display: block;">
+                        Note: Book will be issued on the same day when approved and must be returned by your preferred due date (max 2 weeks).
+                    </small>
                 </div>
                 <button type="submit" class="submit-btn">Submit Request</button>
             </form>
@@ -443,7 +446,7 @@
         // Load books on page load
         document.addEventListener('DOMContentLoaded', function() {
             loadBooks();
-            setMinIssueDate();
+            setMaxDueDate();
             setupSearchEvents();
             checkLogo();
         });
@@ -498,12 +501,19 @@
                 }, 300);
             });
         }
-        function setMinIssueDate() {
+        function setMaxDueDate() {
             const today = new Date();
             const tomorrow = new Date(today);
             tomorrow.setDate(tomorrow.getDate() + 1);
+            const maxDate = new Date(today);
+            maxDate.setDate(maxDate.getDate() + 14); // Allow up to 2 weeks from today
+            
             const minDate = tomorrow.toISOString().split('T')[0];
-            document.getElementById('issueDate').min = minDate;
+            const maxDateStr = maxDate.toISOString().split('T')[0];
+            
+            const dueDateInput = document.getElementById('dueDate');
+            dueDateInput.min = minDate;
+            dueDateInput.max = maxDateStr;
         }
         async function loadBooks() {
             try {
@@ -574,7 +584,7 @@
                 userEmail: formData.get('userEmail'),
                 userPhone: formData.get('userPhone'),
                 userYear: formData.get('userYear'),
-                preferredIssueDate: formData.get('issueDate')
+                preferredDueDate: formData.get('dueDate')
             };
             try {
                 const response = await fetch('/api/request-book', {

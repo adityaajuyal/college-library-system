@@ -445,7 +445,7 @@
                                 <th>Phone</th>
                                 <th>Year</th>
                                 <th>Book Title</th>
-                                <th>Preferred Date</th>
+                                <th>Preferred Due Date</th>
                                 <th>Request Date</th>
                                 <th>Issue Date</th>
                                 <th>Due Date</th>
@@ -734,7 +734,7 @@
                     <td>${request.userPhone || '-'}</td>
                     <td>${request.userYear || '-'}</td>
                     <td>${request.bookTitle}</td>
-                    <td>${request.preferredIssueDate || '-'}</td>
+                    <td>${request.preferredDueDate || '-'}</td>
                     <td>${new Date(request.requestDate).toLocaleDateString()}</td>
                     <td>${request.issueDate || '-'}</td>
                     <td>${request.dueDate || '-'}</td>

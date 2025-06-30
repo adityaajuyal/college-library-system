@@ -278,7 +278,7 @@ app.get('/api/requests', async (req, res) => {
 // User book request
 app.post('/api/request-book', async (req, res) => {
   try {
-    const { bookId, userName, userEmail, userPhone, userYear, preferredIssueDate } = req.body;
+    const { bookId, userName, userEmail, userPhone, userYear, preferredDueDate } = req.body;
     const books = await readBooks();
     const requests = await readRequests();
     
@@ -300,7 +300,7 @@ app.post('/api/request-book', async (req, res) => {
       userEmail,
       userPhone,
       userYear,
-      preferredIssueDate,
+      preferredDueDate,
       status: 'pending',
       requestDate: new Date().toISOString()
     };
@@ -326,9 +326,10 @@ app.post('/api/request-book', async (req, res) => {
               <p><strong>Email:</strong> ${userEmail}</p>
               <p><strong>Phone:</strong> ${userPhone}</p>
               <p><strong>Academic Year:</strong> ${userYear}</p>
-              <p><strong>Preferred Issue Date:</strong> ${preferredIssueDate}</p>
+              <p><strong>Preferred Due Date:</strong> ${preferredDueDate}</p>
               <p><strong>Request Date:</strong> ${new Date().toLocaleDateString()}</p>
               <p><strong>Available Stock:</strong> ${book.available - 1} (after approval)</p>
+              <p style="color: #e74c3c; font-size: 0.9em;"><strong>Note:</strong> Book will be issued on the same day when approved and must be returned by the preferred due date.</p>
             </div>
             <div style="text-align: center; margin: 30px 0;">
               <a href="http://localhost:3000/admin" 
@@ -378,11 +379,13 @@ app.post('/api/approve-request', async (req, res) => {
     await writeBooks(books);
     
     // Update request status with issue date
-    const issueDate = new Date();
+    const issueDate = new Date(); // Issue on the same day when approved
+    const dueDate = new Date(request.preferredDueDate); // Use the student's preferred due date
+    
     request.status = 'approved';
     request.approvedDate = issueDate.toISOString();
     request.issueDate = issueDate.toLocaleDateString();
-    request.dueDate = new Date(issueDate.getTime() + (14 * 24 * 60 * 60 * 1000)).toLocaleDateString(); // 14 days from issue
+    request.dueDate = dueDate.toLocaleDateString();
     await writeRequests(requests);
     
     // Send approval email to student
@@ -395,19 +398,22 @@ app.post('/api/approve-request', async (req, res) => {
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
             <h2 style="color: #4CAF50;">Book Request Approved! 📚</h2>
             <p>Dear ${request.userName},</p>
-            <p>Your book request has been approved. Here are the details:</p>
+            <p>Great news! Your book request has been approved and the book is ready for immediate pickup.</p>
             <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
               <h3 style="margin-top: 0; color: #333;">Book Details</h3>
               <p><strong>Title:</strong> ${request.bookTitle}</p>
-              <p><strong>Issue Date:</strong> ${request.issueDate}</p>
+              <p><strong>Issue Date:</strong> ${request.issueDate} (Today)</p>
               <p><strong>Due Date:</strong> ${request.dueDate}</p>
             </div>
-            <p>Please collect the book from the library counter.</p>
-            <p style="color: #666; font-size: 0.9em;">
-              <strong>Note:</strong> Please return the book by the due date to avoid late fees.
+            <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #4CAF50;">
+              <p style="margin: 0; color: #2e7d32;"><strong>📍 Next Steps:</strong></p>
+              <p style="margin: 5px 0 0 0;">Please visit the library counter today to collect your book. The book is issued from today and must be returned by your preferred due date.</p>
+            </div>
+            <p style="color: #d32f2f; font-weight: bold;">
+              ⚠️ Important: Please return the book by ${request.dueDate} to avoid late fees.
             </p>
             <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;">
-            <p style="color: #888; font-size: 0.8em;">College Library Management System</p>
+            <p style="color: #888; font-size: 0.8em;">Sangrachna's Kitabghar - Library Management System</p>
           </div>
         `
       };
@@ -576,7 +582,7 @@ app.get('/api/export-csv', async (req, res) => {
     const approvedRequests = requests.filter(r => r.status === 'approved');
     
     // CSV header
-    let csvContent = 'Book Name,User Name,User Email,Phone,Academic Year,Preferred Issue Date,Issue Date,Due Date\n';
+    let csvContent = 'Book Name,User Name,User Email,Phone,Academic Year,Preferred Due Date,Issue Date,Due Date\n';
     
     // Add data rows
     approvedRequests.forEach(request => {
@@ -585,7 +591,7 @@ app.get('/api/export-csv', async (req, res) => {
       const userEmail = request.userEmail;
       const userPhone = request.userPhone || 'N/A';
       const userYear = request.userYear || 'N/A';
-      const preferredDate = request.preferredIssueDate || 'N/A';
+      const preferredDate = request.preferredDueDate || 'N/A';
       const issueDate = request.issueDate || 'N/A';
       const dueDate = request.dueDate || 'N/A';
       
