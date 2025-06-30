@@ -402,7 +402,10 @@
                         <tr>
                             <th>Student Name</th>
                             <th>Email</th>
+                            <th>Phone</th>
+                            <th>Year</th>
                             <th>Book Title</th>
+                            <th>Preferred Date</th>
                             <th>Request Date</th>
                             <th>Issue Date</th>
                             <th>Due Date</th>
@@ -687,7 +690,10 @@
                 row.innerHTML = `
                     <td>${request.userName}</td>
                     <td>${request.userEmail}</td>
+                    <td>${request.userPhone || '-'}</td>
+                    <td>${request.userYear || '-'}</td>
                     <td>${request.bookTitle}</td>
+                    <td>${request.preferredIssueDate || '-'}</td>
                     <td>${new Date(request.requestDate).toLocaleDateString()}</td>
                     <td>${request.issueDate || '-'}</td>
                     <td>${request.dueDate || '-'}</td>

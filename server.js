@@ -172,6 +172,9 @@ async function readRequests() {
         bookTitle: req.bookTitle,
         userName: req.userName,
         userEmail: req.userEmail,
+        userPhone: req.userPhone,
+        userYear: req.userYear,
+        preferredIssueDate: req.preferredIssueDate,
         status: req.status,
         requestDate: req.requestDate,
         approvedDate: req.approvedDate,
@@ -275,7 +278,7 @@ app.get('/api/requests', async (req, res) => {
 // User book request
 app.post('/api/request-book', async (req, res) => {
   try {
-    const { bookId, userName, userEmail } = req.body;
+    const { bookId, userName, userEmail, userPhone, userYear, preferredIssueDate } = req.body;
     const books = await readBooks();
     const requests = await readRequests();
     
@@ -295,6 +298,9 @@ app.post('/api/request-book', async (req, res) => {
       bookTitle: book.title,
       userName,
       userEmail,
+      userPhone,
+      userYear,
+      preferredIssueDate,
       status: 'pending',
       requestDate: new Date().toISOString()
     };
@@ -318,6 +324,9 @@ app.post('/api/request-book', async (req, res) => {
               <p><strong>Author:</strong> ${book.author}</p>
               <p><strong>Student Name:</strong> ${userName}</p>
               <p><strong>Email:</strong> ${userEmail}</p>
+              <p><strong>Phone:</strong> ${userPhone}</p>
+              <p><strong>Academic Year:</strong> ${userYear}</p>
+              <p><strong>Preferred Issue Date:</strong> ${preferredIssueDate}</p>
               <p><strong>Request Date:</strong> ${new Date().toLocaleDateString()}</p>
               <p><strong>Available Stock:</strong> ${book.available - 1} (after approval)</p>
             </div>
@@ -567,17 +576,20 @@ app.get('/api/export-csv', async (req, res) => {
     const approvedRequests = requests.filter(r => r.status === 'approved');
     
     // CSV header
-    let csvContent = 'Book Name,User Name,Issue Date,Due Date,User Email\n';
+    let csvContent = 'Book Name,User Name,User Email,Phone,Academic Year,Preferred Issue Date,Issue Date,Due Date\n';
     
     // Add data rows
     approvedRequests.forEach(request => {
       const bookName = request.bookTitle.replace(/,/g, '""'); // Escape commas in book titles
       const userName = request.userName.replace(/,/g, '""'); // Escape commas in user names
+      const userEmail = request.userEmail;
+      const userPhone = request.userPhone || 'N/A';
+      const userYear = request.userYear || 'N/A';
+      const preferredDate = request.preferredIssueDate || 'N/A';
       const issueDate = request.issueDate || 'N/A';
       const dueDate = request.dueDate || 'N/A';
-      const userEmail = request.userEmail;
       
-      csvContent += `"${bookName}","${userName}","${issueDate}","${dueDate}","${userEmail}"\n`;
+      csvContent += `"${bookName}","${userName}","${userEmail}","${userPhone}","${userYear}","${preferredDate}","${issueDate}","${dueDate}"\n`;
     });
     
     // Set headers for file download
