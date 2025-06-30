@@ -1,8 +1,8 @@
 # Environment Variables for Render Deployment
 
 # Required Environment Variables:
-ADMIN_EMAIL=adityajuyal1711@gmail.com
-EMAIL_PASSWORD=Aditya123!
+ADMIN_EMAIL=adityaspidey1711@gmail.com
+EMAIL_PASSWORD=emvtdulryuensqqx
 ADMIN_USERNAME=librarian
 ADMIN_PASSWORD=SecurePassword123!
 

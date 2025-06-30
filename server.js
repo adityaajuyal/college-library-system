@@ -463,6 +463,42 @@ app.post('/api/add-book', async (req, res) => {
   }
 });
 
+// Admin delete book
+app.delete('/api/delete-book/:id', async (req, res) => {
+  try {
+    const bookId = parseInt(req.params.id);
+    const books = await readBooks();
+    
+    // Check if book exists
+    const bookIndex = books.findIndex(book => book.id === bookId);
+    if (bookIndex === -1) {
+      return res.status(404).json({ error: 'Book not found' });
+    }
+    
+    // Check if book has pending or approved requests
+    const requests = await readRequests();
+    const hasActiveRequests = requests.some(request => 
+      request.bookId === bookId && 
+      (request.status === 'pending' || request.status === 'approved')
+    );
+    
+    if (hasActiveRequests) {
+      return res.status(400).json({ 
+        error: 'Cannot delete book with active requests. Please resolve all requests first.' 
+      });
+    }
+    
+    // Remove book from array
+    books.splice(bookIndex, 1);
+    await writeBooks(books);
+    
+    res.json({ message: 'Book deleted successfully!' });
+  } catch (error) {
+    console.error('Error deleting book:', error);
+    res.status(500).json({ error: 'Failed to delete book' });
+  }
+});
+
 // Generate CSV report of issued books
 app.get('/api/export-csv', async (req, res) => {
   try {
