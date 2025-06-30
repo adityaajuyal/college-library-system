@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>College Library - Student Portal</title>
+    <title>Sangrachna's Kitabghar - Student Portal</title>
     <style>
         * {
             margin: 0;
@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
             min-height: 100vh;
             padding: 20px;
         }
@@ -21,14 +21,14 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            background: white;
+            background: #f8f9fa;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             overflow: hidden;
         }
 
         .header {
-            background: linear-gradient(135deg, #4CAF50, #45a049);
+            background: linear-gradient(135deg, #333333, #1a1a1a);
             color: white;
             padding: 30px;
             text-align: center;
@@ -56,7 +56,7 @@
             font-size: 1.5rem;
             color: #333;
             margin-bottom: 20px;
-            border-bottom: 2px solid #4CAF50;
+            border-bottom: 2px solid #666666;
             padding-bottom: 10px;
         }
 
@@ -67,10 +67,10 @@
         }
 
         .book-card {
-            background: #f9f9f9;
+            background: white;
             border-radius: 10px;
             padding: 20px;
-            border: 1px solid #ddd;
+            border: 1px solid #e0e0e0;
             transition: transform 0.3s, box-shadow 0.3s;
             display: flex;
             flex-direction: column;
@@ -78,7 +78,7 @@
 
         .book-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
         }
 
         .book-image {
@@ -103,23 +103,23 @@
 
         .book-stock {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
             margin-bottom: 15px;
             font-size: 0.9rem;
         }
 
         .stock-available {
-            color: #4CAF50;
+            color: #666666;
             font-weight: bold;
         }
 
         .stock-unavailable {
-            color: #f44336;
+            color: #333333;
             font-weight: bold;
         }
 
         .request-btn {
-            background: #4CAF50;
+            background: #333333;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -131,7 +131,7 @@
         }
 
         .request-btn:hover {
-            background: #45a049;
+            background: #555555;
         }
 
         .request-btn:disabled {
@@ -193,9 +193,17 @@
             border-radius: 5px;
             font-size: 1rem;
         }
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            background: white;
+        }
 
         .submit-btn {
-            background: #4CAF50;
+            background: #333333;
             color: white;
             border: none;
             padding: 12px 30px;
@@ -206,14 +214,14 @@
         }
 
         .submit-btn:hover {
-            background: #45a049;
+            background: #555555;
         }
 
         .admin-link {
             position: fixed;
             top: 20px;
             right: 20px;
-            background: #2196F3;
+            background: #333333;
             color: white;
             padding: 10px 20px;
             text-decoration: none;
@@ -222,7 +230,7 @@
         }
 
         .admin-link:hover {
-            background: #1976D2;
+            background: #555555;
         }
 
         .message {
@@ -248,11 +256,9 @@
             .header h1 {
                 font-size: 2rem;
             }
-            
             .main-content {
                 padding: 20px;
             }
-            
             .books-grid {
                 grid-template-columns: 1fr;
             }
@@ -261,16 +267,13 @@
 </head>
 <body>
     <a href="/admin" class="admin-link">Admin Panel</a>
-    
     <div class="container">
         <div class="header">
-            <h1>College Library System</h1>
+            <h1>Sangrachna's Kitabghar</h1>
             <p>Browse and request books from our collection</p>
         </div>
-
         <div class="main-content">
             <div id="message" class="message"></div>
-            
             <div class="books-section">
                 <h2 class="section-title">Available Books</h2>
                 <div id="booksGrid" class="books-grid">
@@ -279,7 +282,6 @@
             </div>
         </div>
     </div>
-
     <!-- Request Modal -->
     <div id="requestModal" class="modal">
         <div class="modal-content">
@@ -323,16 +325,13 @@
             </form>
         </div>
     </div>
-
     <script>
         let books = [];
-
         // Load books on page load
         document.addEventListener('DOMContentLoaded', function() {
             loadBooks();
             setMinIssueDate();
         });
-
         function setMinIssueDate() {
             const today = new Date();
             const tomorrow = new Date(today);
@@ -340,7 +339,6 @@
             const minDate = tomorrow.toISOString().split('T')[0];
             document.getElementById('issueDate').min = minDate;
         }
-
         async function loadBooks() {
             try {
                 const response = await fetch('/api/books');
@@ -350,25 +348,20 @@
                 showMessage('Failed to load books', 'error');
             }
         }
-
         function displayBooks() {
             const booksGrid = document.getElementById('booksGrid');
             booksGrid.innerHTML = '';
-
             books.forEach(book => {
                 const bookCard = document.createElement('div');
                 bookCard.className = 'book-card';
-                
                 const isAvailable = book.available > 0;
-                
                 bookCard.innerHTML = `
                     <img src="${book.image}" alt="${book.title}" class="book-image" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80'">
                     <div class="book-title">${book.title}</div>
                     <div class="book-author">by ${book.author}</div>
                     <div class="book-stock">
-                        <span>Total: ${book.stock}</span>
                         <span class="${isAvailable ? 'stock-available' : 'stock-unavailable'}">
-                            Available: ${book.available}
+                            ${isAvailable ? `Available: ${book.available}` : 'Out of Stock'}
                         </span>
                     </div>
                     <button class="request-btn" ${!isAvailable ? 'disabled' : ''} 
@@ -376,33 +369,27 @@
                         ${isAvailable ? 'Request Book' : 'Out of Stock'}
                     </button>
                 `;
-                
                 booksGrid.appendChild(bookCard);
             });
         }
-
         function openRequestModal(bookId, bookTitle) {
             document.getElementById('bookId').value = bookId;
             document.getElementById('bookTitle').value = bookTitle;
             document.getElementById('requestModal').style.display = 'block';
         }
-
         // Close modal
         document.querySelector('.close').onclick = function() {
             document.getElementById('requestModal').style.display = 'none';
         }
-
         window.onclick = function(event) {
             const modal = document.getElementById('requestModal');
             if (event.target == modal) {
                 modal.style.display = 'none';
             }
         }
-
         // Handle form submission
         document.getElementById('requestForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
             const formData = new FormData(this);
             const requestData = {
                 bookId: formData.get('bookId'),
@@ -412,7 +399,6 @@
                 userYear: formData.get('userYear'),
                 preferredIssueDate: formData.get('issueDate')
             };
-
             try {
                 const response = await fetch('/api/request-book', {
                     method: 'POST',
@@ -421,9 +407,7 @@
                     },
                     body: JSON.stringify(requestData)
                 });
-
                 const result = await response.json();
-
                 if (response.ok) {
                     showMessage(result.message, 'success');
                     document.getElementById('requestModal').style.display = 'none';
@@ -436,13 +420,11 @@
                 showMessage('Failed to submit request', 'error');
             }
         });
-
         function showMessage(text, type) {
             const messageEl = document.getElementById('message');
             messageEl.textContent = text;
             messageEl.className = `message ${type}`;
             messageEl.style.display = 'block';
-            
             setTimeout(() => {
                 messageEl.style.display = 'none';
             }, 5000);
