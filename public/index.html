@@ -32,11 +32,33 @@
             color: white;
             padding: 30px;
             text-align: center;
+            position: relative;
+        }
+
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            max-width: 200px;
+            max-height: 80px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            filter: brightness(1.1);
         }
 
         .header h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
+            display: none; /* Hidden when logo is present */
+        }
+
+        .header.no-logo h1 {
+            display: block; /* Show text if no logo */
         }
 
         .header p {
@@ -345,8 +367,11 @@
 <body>
     <a href="/admin" class="admin-link">Admin Panel</a>
     <div class="container">
-        <div class="header">
-            <h1>Sangrachna's Kitabghar</h1>
+        <div class="header" id="header">
+            <div class="logo-container">
+                <img src="/logo.svg" alt="Sangrachna's Kitabghar" class="logo" id="logo" onerror="handleLogoError()">
+                <h1 id="headerTitle">Sangrachna's Kitabghar</h1>
+            </div>
             <p>Browse and request books from our collection</p>
         </div>
         <div class="main-content">
@@ -420,7 +445,37 @@
             loadBooks();
             setMinIssueDate();
             setupSearchEvents();
+            checkLogo();
         });
+
+        function checkLogo() {
+            const logo = document.getElementById('logo');
+            const header = document.getElementById('header');
+            const title = document.getElementById('headerTitle');
+            
+            // Try to load the logo
+            const testImg = new Image();
+            testImg.onload = function() {
+                // Logo exists, hide title
+                title.style.display = 'none';
+                logo.style.display = 'block';
+            };
+            testImg.onerror = function() {
+                // Logo doesn't exist, show title and hide logo
+                handleLogoError();
+            };
+            testImg.src = '/logo.svg';
+        }
+
+        function handleLogoError() {
+            const logo = document.getElementById('logo');
+            const header = document.getElementById('header');
+            const title = document.getElementById('headerTitle');
+            
+            logo.style.display = 'none';
+            title.style.display = 'block';
+            header.classList.add('no-logo');
+        }
 
         function setupSearchEvents() {
             const searchInput = document.getElementById('searchInput');
