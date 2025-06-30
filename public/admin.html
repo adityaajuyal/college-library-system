@@ -56,33 +56,11 @@
             color: white;
             padding: 30px;
             text-align: center;
-            position: relative;
-        }
-
-        .logo-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .logo {
-            max-width: 200px;
-            max-height: 80px;
-            width: auto;
-            height: auto;
-            object-fit: contain;
-            filter: brightness(1.1);
         }
 
         .header h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
-            display: none; /* Hidden when logo is present */
-        }
-
-        .header.no-logo h1 {
-            display: block; /* Show text if no logo */
         }
 
         .header p {
@@ -370,10 +348,7 @@
     
     <!-- Login Form -->
     <div id="loginContainer" class="login-container">
-        <h2 class="login-title">
-            <img src="/logo.svg" alt="Sangrachna's Kitabghar" style="max-width: 200px; max-height: 60px; margin-bottom: 10px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-            <span style="display: none;">Sangrachna's Kitabghar - Admin Login</span>
-        </h2>
+        <h2 class="login-title">Sangrachna's Kitabghar - Admin Login</h2>
         <form id="loginForm">
             <div class="form-group">
                 <label for="username">Username:</label>
@@ -390,11 +365,8 @@
     
     <!-- Main Admin Panel -->
     <div id="adminPanel" class="container" style="display: none;">
-        <div class="header" id="adminHeader">
-            <div class="logo-container">
-                <img src="/logo.svg" alt="Sangrachna's Kitabghar" class="logo" id="adminLogo" onerror="handleAdminLogoError()">
-                <h1 id="adminHeaderTitle">Sangrachna's Kitabghar - Admin Panel</h1>
-            </div>
+        <div class="header">
+            <h1>Sangrachna's Kitabghar - Admin Panel</h1>
             <p>Manage books, requests, and library operations</p>
             <button onclick="logout()" class="btn btn-warning" style="position: absolute; top: 20px; right: 20px;">Logout</button>
         </div>
@@ -559,37 +531,7 @@
             if (isLoggedIn === 'true') {
                 showAdminPanel();
             }
-            checkAdminLogo();
         });
-
-        function checkAdminLogo() {
-            const logo = document.getElementById('adminLogo');
-            const header = document.getElementById('adminHeader');
-            const title = document.getElementById('adminHeaderTitle');
-            
-            // Try to load the logo
-            const testImg = new Image();
-            testImg.onload = function() {
-                // Logo exists, hide title
-                title.style.display = 'none';
-                logo.style.display = 'block';
-            };
-            testImg.onerror = function() {
-                // Logo doesn't exist, show title and hide logo
-                handleAdminLogoError();
-            };
-            testImg.src = '/logo.svg';
-        }
-
-        function handleAdminLogoError() {
-            const logo = document.getElementById('adminLogo');
-            const header = document.getElementById('adminHeader');
-            const title = document.getElementById('adminHeaderTitle');
-            
-            logo.style.display = 'none';
-            title.style.display = 'block';
-            header.classList.add('no-logo');
-        }
 
         // Login form submission
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
