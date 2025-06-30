@@ -731,7 +731,7 @@
 
         async function deleteBook(bookId, bookTitle) {
             // Confirm before deleting
-            if (!confirm(`Are you sure you want to delete "${bookTitle}"?\n\nThis action cannot be undone. The book will be permanently removed from the library system.`)) {
+            if (!confirm(`Are you sure you want to delete "${bookTitle}"?\n\nThis action cannot be undone. The book and ALL related requests will be permanently removed from the library system.`)) {
                 return;
             }
 

@@ -534,24 +534,26 @@ app.delete('/api/delete-book/:id', async (req, res) => {
       return res.status(404).json({ error: 'Book not found' });
     }
     
-    // Check if book has pending or approved requests
-    const requests = await readRequests();
-    const hasActiveRequests = requests.some(request => 
-      request.bookId === bookId && 
-      (request.status === 'pending' || request.status === 'approved')
-    );
+    const bookTitle = books[bookIndex].title;
     
-    if (hasActiveRequests) {
-      return res.status(400).json({ 
-        error: 'Cannot delete book with active requests. Please resolve all requests first.' 
-      });
-    }
+    // Remove all requests related to this book
+    const requests = await readRequests();
+    const relatedRequests = requests.filter(request => request.bookId === bookId);
+    const updatedRequests = requests.filter(request => request.bookId !== bookId);
+    
+    // Save updated requests (without the deleted book's requests)
+    await writeRequests(updatedRequests);
     
     // Remove book from array
     books.splice(bookIndex, 1);
     await writeBooks(books);
     
-    res.json({ message: 'Book deleted successfully!' });
+    const deletedRequestsCount = relatedRequests.length;
+    const message = deletedRequestsCount > 0 
+      ? `Book "${bookTitle}" deleted successfully! ${deletedRequestsCount} related request(s) were also removed.`
+      : `Book "${bookTitle}" deleted successfully!`;
+    
+    res.json({ message });
   } catch (error) {
     console.error('Error deleting book:', error);
     res.status(500).json({ error: 'Failed to delete book' });
