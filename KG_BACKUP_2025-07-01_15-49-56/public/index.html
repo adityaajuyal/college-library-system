@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sangrachna's Kitabghar - Student Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #f8f9fa;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #333333, #1a1a1a);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            max-width: 200px;
+            max-height: 80px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            filter: brightness(1.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: none; /* Hidden when logo is present */
+        }
+
+        .header.no-logo h1 {
+            display: block; /* Show text if no logo */
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .collection-notice {
+            background: linear-gradient(135deg, #e8f5e8, #f0f8f0);
+            border: 2px solid #4CAF50;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.1);
+        }
+
+        .notice-icon {
+            font-size: 2rem;
+            color: #4CAF50;
+            margin-top: 5px;
+        }
+
+        .notice-content h3 {
+            color: #2e7d32;
+            margin: 0 0 10px 0;
+            font-size: 1.3rem;
+        }
+
+        .notice-content p {
+            margin: 5px 0;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        .notice-content p strong {
+            color: #2e7d32;
+        }
+
+        .books-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #666666;
+            padding-bottom: 10px;
+        }
+
+        .search-container {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-input {
+            flex: 1;
+            max-width: 500px;
+            padding: 12px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .search-input:focus {
+            border-color: #666666;
+            box-shadow: 0 0 10px rgba(102, 102, 102, 0.1);
+        }
+
+        .search-button {
+            background: #333333;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s;
+            min-width: 80px;
+        }
+
+        .search-button:hover {
+            background: #555555;
+        }
+
+        .clear-search {
+            background: #666666;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s;
+        }
+
+        .clear-search:hover {
+            background: #777777;
+        }
+
+        .no-results {
+            text-align: center;
+            color: #666;
+            font-size: 1.1rem;
+            margin: 40px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .book-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .book-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .book-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .book-author {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .book-stock {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+
+        .stock-available {
+            color: #666666;
+            font-weight: bold;
+        }
+
+        .stock-unavailable {
+            color: #333333;
+            font-weight: bold;
+        }
+
+        .request-btn {
+            background: #333333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+
+        .request-btn:hover {
+            background: #555555;
+        }
+
+        .request-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            top: 15px;
+            right: 20px;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            background: white;
+        }
+
+        .submit-btn {
+            background: #333333;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background: #555555;
+        }
+
+        .admin-link {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #333333;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s;
+            font-weight: bold;
+            z-index: 999;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            font-size: 0.95rem;
+        }
+
+        .admin-link:hover {
+            background: #555555;
+        }
+
+        .message {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            .main-content {
+                padding: 20px;
+            }
+            .books-grid {
+                grid-template-columns: 1fr;
+            }
+            .search-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .search-input {
+                max-width: 100%;
+            }
+            .search-button, .clear-search {
+                width: 100%;
+                max-width: 200px;
+            }
+            .admin-link {
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                padding: 8px 16px;
+                font-size: 0.9rem;
+                z-index: 1000;
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            }
+            .collection-notice {
+                flex-direction: column;
+                text-align: center;
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+            .notice-icon {
+                font-size: 1.5rem;
+                margin-bottom: 10px;
+            }
+            .notice-content h3 {
+                font-size: 1.1rem;
+            }
+            .notice-content p {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="/admin" class="admin-link">Admin Panel</a>
+    <div class="container">
+        <div class="header" id="header">
+            <div class="logo-container">
+                <img src="/image.png" alt="Sangrachna's Kitabghar" class="logo" id="logo" onerror="handleLogoError()">
+                <h1 id="headerTitle">Sangrachna's Kitabghar</h1>
+            </div>
+            <p>Browse and request books from our collection</p>
+        </div>
+        <div class="main-content">
+            <div id="message" class="message"></div>
+            
+            <!-- Collection Location Notice -->
+            <div class="collection-notice">
+                <div class="notice-icon">📍</div>
+                <div class="notice-content">
+                    <h3>Book Collection Location</h3>
+                    <p><strong>Address:</strong> Near Audi, First Floor, B Block, Plot 19</p>
+                    <p>Once your book request is approved, please visit this location to collect your book.</p>
+                </div>
+            </div>
+            
+            <div class="books-section">
+                <h2 class="section-title">Available Books</h2>
+                <div class="search-container">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Search books by title or author...">
+                    <button onclick="searchBooks()" class="search-button">Search</button>
+                    <button onclick="clearSearch()" class="clear-search" id="clearBtn" style="display: none;">Clear</button>
+                </div>
+                <div id="booksGrid" class="books-grid">
+                    <!-- Books will be loaded here -->
+                </div>
+                <div id="noResults" class="no-results" style="display: none;">
+                    No books found matching your search. Try different keywords.
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Request Modal -->
+    <div id="requestModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Request Book</h2>
+            <form id="requestForm">
+                <input type="hidden" id="bookId" name="bookId">
+                <div class="form-group">
+                    <label>Book Title:</label>
+                    <input type="text" id="bookTitle" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="userName">Your Name:</label>
+                    <input type="text" id="userName" name="userName" required>
+                </div>
+                <div class="form-group">
+                    <label for="userEmail">Your Email:</label>
+                    <input type="email" id="userEmail" name="userEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="userPhone">Your Phone Number:</label>
+                    <input type="tel" id="userPhone" name="userPhone" pattern="[0-9]{10}" placeholder="1234567890" required>
+                </div>
+                <div class="form-group">
+                    <label for="userYear">Your Academic Year:</label>
+                    <select id="userYear" name="userYear" required>
+                        <option value="">Select Year</option>
+                        <option value="1st Year">1st Year</option>
+                        <option value="2nd Year">2nd Year</option>
+                        <option value="3rd Year">3rd Year</option>
+                        <option value="4th Year">4th Year</option>
+                        <option value="Graduate">Graduate</option>
+                        <option value="Faculty">Faculty</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="dueDate">Preferred Due Date (within 2 weeks):</label>
+                    <input type="date" id="dueDate" name="dueDate" required>
+                    <small style="color: #666; font-size: 0.9em; margin-top: 5px; display: block;">
+                        Note: Book will be issued on the same day when approved and must be returned by your preferred due date (max 2 weeks).
+                    </small>
+                </div>
+                <button type="submit" class="submit-btn">Submit Request</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        let books = [];
+        let filteredBooks = [];
+        let isSearching = false;
+
+        // Load books on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadBooks();
+            setMaxDueDate();
+            setupSearchEvents();
+            checkLogo();
+        });
+
+        function checkLogo() {
+            const logo = document.getElementById('logo');
+            const header = document.getElementById('header');
+            const title = document.getElementById('headerTitle');
+            
+            // Try to load the logo
+            const testImg = new Image();
+            testImg.onload = function() {
+                // Logo exists, hide title
+                title.style.display = 'none';
+                logo.style.display = 'block';
+            };
+            testImg.onerror = function() {
+                // Logo doesn't exist, show title and hide logo
+                handleLogoError();
+            };
+            testImg.src = '/image.png';
+        }
+
+        function handleLogoError() {
+            const logo = document.getElementById('logo');
+            const header = document.getElementById('header');
+            const title = document.getElementById('headerTitle');
+            
+            logo.style.display = 'none';
+            title.style.display = 'block';
+            header.classList.add('no-logo');
+        }
+
+        function setupSearchEvents() {
+            const searchInput = document.getElementById('searchInput');
+            // Search on Enter key press
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchBooks();
+                }
+            });
+            // Real-time search as user types (with debounce)
+            let searchTimeout;
+            searchInput.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(function() {
+                    if (searchInput.value.trim() === '') {
+                        clearSearch();
+                    } else {
+                        searchBooks();
+                    }
+                }, 300);
+            });
+        }
+        function setMaxDueDate() {
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const maxDate = new Date(today);
+            maxDate.setDate(maxDate.getDate() + 14); // Allow up to 2 weeks from today
+            
+            const minDate = tomorrow.toISOString().split('T')[0];
+            const maxDateStr = maxDate.toISOString().split('T')[0];
+            
+            const dueDateInput = document.getElementById('dueDate');
+            dueDateInput.min = minDate;
+            dueDateInput.max = maxDateStr;
+        }
+        async function loadBooks() {
+            try {
+                const response = await fetch('/api/books');
+                books = await response.json();
+                displayBooks();
+            } catch (error) {
+                showMessage('Failed to load books', 'error');
+            }
+        }
+        function displayBooks(booksToShow = null) {
+            const booksGrid = document.getElementById('booksGrid');
+            const noResults = document.getElementById('noResults');
+            booksGrid.innerHTML = '';
+            
+            const displayBooks = booksToShow || books;
+            
+            if (displayBooks.length === 0 && isSearching) {
+                noResults.style.display = 'block';
+                return;
+            } else {
+                noResults.style.display = 'none';
+            }
+            
+            displayBooks.forEach(book => {
+                const bookCard = document.createElement('div');
+                bookCard.className = 'book-card';
+                const isAvailable = book.available > 0;
+                bookCard.innerHTML = `
+                    <img src="${book.image}" alt="${book.title}" class="book-image" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80'">
+                    <div class="book-title">${book.title}</div>
+                    <div class="book-author">by ${book.author}</div>
+                    <div class="book-stock">
+                        <span class="${isAvailable ? 'stock-available' : 'stock-unavailable'}">
+                            ${isAvailable ? `Available: ${book.available}` : 'Out of Stock'}
+                        </span>
+                    </div>
+                    <button class="request-btn" ${!isAvailable ? 'disabled' : ''} 
+                            onclick="openRequestModal(${book.id}, '${book.title}')">
+                        ${isAvailable ? 'Request Book' : 'Out of Stock'}
+                    </button>
+                `;
+                booksGrid.appendChild(bookCard);
+            });
+        }
+        function openRequestModal(bookId, bookTitle) {
+            document.getElementById('bookId').value = bookId;
+            document.getElementById('bookTitle').value = bookTitle;
+            document.getElementById('requestModal').style.display = 'block';
+        }
+        // Close modal
+        document.querySelector('.close').onclick = function() {
+            document.getElementById('requestModal').style.display = 'none';
+        }
+        window.onclick = function(event) {
+            const modal = document.getElementById('requestModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+        // Handle form submission
+        document.getElementById('requestForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const requestData = {
+                bookId: formData.get('bookId'),
+                userName: formData.get('userName'),
+                userEmail: formData.get('userEmail'),
+                userPhone: formData.get('userPhone'),
+                userYear: formData.get('userYear'),
+                preferredDueDate: formData.get('dueDate')
+            };
+            try {
+                const response = await fetch('/api/request-book', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestData)
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    showMessage(result.message, 'success');
+                    document.getElementById('requestModal').style.display = 'none';
+                    this.reset();
+                    loadBooks(); // Refresh books
+                } else {
+                    showMessage(result.error, 'error');
+                }
+            } catch (error) {
+                showMessage('Failed to submit request', 'error');
+            }
+        });
+        function showMessage(text, type) {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = text;
+            messageEl.className = `message ${type}`;
+            messageEl.style.display = 'block';
+            setTimeout(() => {
+                messageEl.style.display = 'none';
+            }, 5000);
+        }
+
+        function searchBooks() {
+            const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+            const clearBtn = document.getElementById('clearBtn');
+            
+            if (searchTerm === '') {
+                clearSearch();
+                return;
+            }
+            
+            isSearching = true;
+            clearBtn.style.display = 'inline-block';
+            
+            filteredBooks = books.filter(book => {
+                return book.title.toLowerCase().includes(searchTerm) || 
+                       book.author.toLowerCase().includes(searchTerm);
+            });
+            
+            displayBooks(filteredBooks);
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('clearBtn').style.display = 'none';
+            document.getElementById('noResults').style.display = 'none';
+            isSearching = false;
+            filteredBooks = [];
+            displayBooks();
+        }
+    </script>
+</body>
+</html>

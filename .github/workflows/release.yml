@@ -1,0 +1,145 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., v2.0.0)'
+        required: true
+        default: 'v2.0.0'
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Generate changelog
+      id: changelog
+      run: |
+        echo "## 🎨 Sangrachna's Kitabghar Release ${{ github.event.inputs.version || github.ref_name }}" > RELEASE_NOTES.md
+        echo "" >> RELEASE_NOTES.md
+        echo "### ✨ New Features" >> RELEASE_NOTES.md
+        echo "- Professional black, white, grey, and red color scheme" >> RELEASE_NOTES.md
+        echo "- Modern glassmorphism effects and animations" >> RELEASE_NOTES.md
+        echo "- Enhanced user experience with smooth transitions" >> RELEASE_NOTES.md
+        echo "- Improved accessibility with high contrast design" >> RELEASE_NOTES.md
+        echo "- Floating particle background system" >> RELEASE_NOTES.md
+        echo "- Advanced search functionality with modern UI" >> RELEASE_NOTES.md
+        echo "" >> RELEASE_NOTES.md
+        echo "### 🛠️ Improvements" >> RELEASE_NOTES.md
+        echo "- Inter font family for better readability" >> RELEASE_NOTES.md
+        echo "- Consistent design language across all components" >> RELEASE_NOTES.md
+        echo "- Enhanced button styling with gradients" >> RELEASE_NOTES.md
+        echo "- Improved mobile responsiveness" >> RELEASE_NOTES.md
+        echo "- Better visual hierarchy and spacing" >> RELEASE_NOTES.md
+        echo "" >> RELEASE_NOTES.md
+        echo "### 🎯 Technical Updates" >> RELEASE_NOTES.md
+        echo "- Performance optimized animations (60fps)" >> RELEASE_NOTES.md
+        echo "- Modern CSS properties (backdrop-filter, gradients)" >> RELEASE_NOTES.md
+        echo "- Enhanced GitHub workflows and templates" >> RELEASE_NOTES.md
+        echo "- Comprehensive documentation updates" >> RELEASE_NOTES.md
+        echo "" >> RELEASE_NOTES.md
+        echo "### 📱 UI/UX Highlights" >> RELEASE_NOTES.md
+        echo "- **Color Palette**: Professional monochrome with strategic red accents" >> RELEASE_NOTES.md
+        echo "- **Typography**: Modern Inter font with improved hierarchy" >> RELEASE_NOTES.md
+        echo "- **Animations**: Smooth fade-in effects and hover interactions" >> RELEASE_NOTES.md
+        echo "- **Accessibility**: WCAG 2.1 AA compliant design" >> RELEASE_NOTES.md
+        echo "- **Performance**: Optimized for 60fps smooth animations" >> RELEASE_NOTES.md
+        echo "" >> RELEASE_NOTES.md
+        echo "---" >> RELEASE_NOTES.md
+        echo "" >> RELEASE_NOTES.md
+        echo "🌐 **Live Demo**: [https://college-library-system.onrender.com](https://college-library-system.onrender.com)" >> RELEASE_NOTES.md
+        echo "📚 **Documentation**: [README.md](README.md)" >> RELEASE_NOTES.md
+        echo "🤝 **Contributing**: [CONTRIBUTING.md](CONTRIBUTING.md)" >> RELEASE_NOTES.md
+      
+    - name: Create ZIP archive
+      run: |
+        # Create clean build without node_modules and .git
+        mkdir -p sangrachna-kitabghar-release
+        
+        # Copy essential files
+        cp -r public sangrachna-kitabghar-release/
+        cp -r data sangrachna-kitabghar-release/
+        cp -r .github sangrachna-kitabghar-release/
+        cp server.js sangrachna-kitabghar-release/
+        cp package.json sangrachna-kitabghar-release/
+        cp package-lock.json sangrachna-kitabghar-release/
+        cp README.md sangrachna-kitabghar-release/
+        cp CONTRIBUTING.md sangrachna-kitabghar-release/
+        cp *.md sangrachna-kitabghar-release/ 2>/dev/null || true
+        cp .env.example sangrachna-kitabghar-release/ 2>/dev/null || true
+        cp .gitignore sangrachna-kitabghar-release/ 2>/dev/null || true
+        
+        # Create installation guide
+        cat > sangrachna-kitabghar-release/INSTALLATION.md << 'EOF'
+        # Quick Installation Guide
+        
+        ## Prerequisites
+        - Node.js 18+ installed
+        - Git (optional)
+        
+        ## Setup Steps
+        1. Extract this archive to your desired location
+        2. Open terminal/command prompt in the extracted folder
+        3. Run: `npm install`
+        4. Configure environment variables (see .env.example)
+        5. Run: `npm start`
+        6. Open browser to http://localhost:3000
+        
+        ## Default Admin Credentials
+        - Username: admin
+        - Password: admin123
+        
+        ⚠️ **Important**: Change these credentials in production!
+        
+        ## Need Help?
+        - Read README.md for detailed documentation
+        - Check CONTRIBUTING.md for development guidelines
+        - Visit our GitHub repository for issues and support
+        EOF
+        
+        # Create archive
+        zip -r sangrachna-kitabghar-${{ github.event.inputs.version || github.ref_name }}.zip sangrachna-kitabghar-release
+        
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.event.inputs.version || github.ref_name }}
+        release_name: Sangrachna's Kitabghar ${{ github.event.inputs.version || github.ref_name }}
+        body_path: RELEASE_NOTES.md
+        draft: false
+        prerelease: false
+        
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./sangrachna-kitabghar-${{ github.event.inputs.version || github.ref_name }}.zip
+        asset_name: sangrachna-kitabghar-${{ github.event.inputs.version || github.ref_name }}.zip
+        asset_content_type: application/zip
+        
+    - name: Notify Success
+      run: |
+        echo "🎉 Release ${{ github.event.inputs.version || github.ref_name }} created successfully!"
+        echo "📦 Download: https://github.com/${{ github.repository }}/releases/tag/${{ github.event.inputs.version || github.ref_name }}"
+        echo "🌐 Live Demo: https://college-library-system.onrender.com"

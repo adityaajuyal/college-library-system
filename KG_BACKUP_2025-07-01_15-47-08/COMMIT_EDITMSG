@@ -1,0 +1,10 @@
+Update: Switch to image.png logo and add book collection location information
+
+- Changed logo filename from logo.svg to image.png for better visibility (white logo)
+- Added prominent collection location notice on user page with address details
+- Updated email notifications to include collection location in approval emails
+- Added mobile-responsive styling for collection notice
+- Enhanced collection instructions: Near Audi, First Floor, B Block, Plot 19
+- Updated LOGO_INSTRUCTIONS.md to use image.png instead of logo.png
+- Improved user experience with clear pickup location information
+- Added styled notice box with location icon and professional design

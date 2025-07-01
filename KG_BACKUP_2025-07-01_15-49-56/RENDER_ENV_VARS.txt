@@ -1,0 +1,30 @@
+# Environment Variables for Render Deployment
+
+# Required Environment Variables:
+ADMIN_EMAIL=adityaspidey1711@gmail.com
+EMAIL_PASSWORD=emvtdulryuensqqx
+ADMIN_USERNAME=librarian
+ADMIN_PASSWORD=SecurePassword123!
+
+# Database Configuration (IMPORTANT!)
+# Replace 'username' with your database username
+# Replace 'password' with your database password  
+# Replace 'cluster.mongodb.net' with your actual cluster URL
+MONGODB_URI=mongodb+srv://Adityaajuyal:aditya123@cluster0.mh1ee.mongodb.net/college-library?retryWrites=true&w=majority&appName=Cluster0
+
+# Example: mongodb+srv://libraryuser:mypass123@cluster0.abc123.mongodb.net/college-library
+
+# Gmail App Password Setup:
+# 1. Go to myaccount.google.com
+# 2. Security → 2-Step Verification (enable it)
+# 3. Security → App passwords
+# 4. Select "Mail" and generate password
+# 5. Use the 16-character password above
+
+# MongoDB Atlas Setup (FREE):
+# 1. Go to mongodb.com/atlas
+# 2. Create free account
+# 3. Create cluster (FREE tier)
+# 4. Create database user
+# 5. Get connection string
+# 6. Replace MONGODB_URI above with your connection string
