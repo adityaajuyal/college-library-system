@@ -406,8 +406,9 @@ app.post('/api/approve-request', async (req, res) => {
               <p><strong>Due Date:</strong> ${request.dueDate}</p>
             </div>
             <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #4CAF50;">
-              <p style="margin: 0; color: #2e7d32;"><strong>📍 Next Steps:</strong></p>
-              <p style="margin: 5px 0 0 0;">Please visit the library counter today to collect your book. The book is issued from today and must be returned by your preferred due date.</p>
+              <p style="margin: 0; color: #2e7d32;"><strong>📍 Collection Location:</strong></p>
+              <p style="margin: 5px 0 0 0;"><strong>Address:</strong> Near Audi, First Floor, B Block, Plot 19</p>
+              <p style="margin: 5px 0 0 0;">Please visit this location today to collect your book. The book is issued from today and must be returned by your preferred due date.</p>
             </div>
             <p style="color: #d32f2f; font-weight: bold;">
               ⚠️ Important: Please return the book by ${request.dueDate} to avoid late fees.

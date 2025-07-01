@@ -6,10 +6,10 @@
    - **Format**: PNG (recommended) or JPG
    - **Size**: Recommended 400x160 pixels (or similar ratio)
    - **Background**: Transparent PNG works best
-   - **Name**: Save as `logo.png`
+   - **Name**: Save as `image.png`
 
 2. **Add logo to your project**:
-   - Place `logo.png` in the `public` folder
+   - Place `image.png` in the `public` folder
    - The system will automatically detect and use it
 
 3. **Deploy to Render**:
@@ -36,7 +36,7 @@ If no logo is found:
 ```
 KG/
 ├── public/
-│   ├── logo.png        ← Place your logo here
+│   ├── image.png       ← Place your logo here
 │   ├── index.html
 │   └── admin.html
 ```

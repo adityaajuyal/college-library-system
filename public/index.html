@@ -70,6 +70,40 @@
             padding: 40px;
         }
 
+        .collection-notice {
+            background: linear-gradient(135deg, #e8f5e8, #f0f8f0);
+            border: 2px solid #4CAF50;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.1);
+        }
+
+        .notice-icon {
+            font-size: 2rem;
+            color: #4CAF50;
+            margin-top: 5px;
+        }
+
+        .notice-content h3 {
+            color: #2e7d32;
+            margin: 0 0 10px 0;
+            font-size: 1.3rem;
+        }
+
+        .notice-content p {
+            margin: 5px 0;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        .notice-content p strong {
+            color: #2e7d32;
+        }
+
         .books-section {
             margin-bottom: 40px;
         }
@@ -375,6 +409,22 @@
                 border-radius: 8px;
                 box-shadow: 0 2px 8px rgba(0,0,0,0.3);
             }
+            .collection-notice {
+                flex-direction: column;
+                text-align: center;
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+            .notice-icon {
+                font-size: 1.5rem;
+                margin-bottom: 10px;
+            }
+            .notice-content h3 {
+                font-size: 1.1rem;
+            }
+            .notice-content p {
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
@@ -383,13 +433,24 @@
     <div class="container">
         <div class="header" id="header">
             <div class="logo-container">
-                <img src="/logo.svg" alt="Sangrachna's Kitabghar" class="logo" id="logo" onerror="handleLogoError()">
+                <img src="/image.png" alt="Sangrachna's Kitabghar" class="logo" id="logo" onerror="handleLogoError()">
                 <h1 id="headerTitle">Sangrachna's Kitabghar</h1>
             </div>
             <p>Browse and request books from our collection</p>
         </div>
         <div class="main-content">
             <div id="message" class="message"></div>
+            
+            <!-- Collection Location Notice -->
+            <div class="collection-notice">
+                <div class="notice-icon">📍</div>
+                <div class="notice-content">
+                    <h3>Book Collection Location</h3>
+                    <p><strong>Address:</strong> Near Audi, First Floor, B Block, Plot 19</p>
+                    <p>Once your book request is approved, please visit this location to collect your book.</p>
+                </div>
+            </div>
+            
             <div class="books-section">
                 <h2 class="section-title">Available Books</h2>
                 <div class="search-container">
@@ -481,7 +542,7 @@
                 // Logo doesn't exist, show title and hide logo
                 handleLogoError();
             };
-            testImg.src = '/logo.svg';
+            testImg.src = '/image.png';
         }
 
         function handleLogoError() {

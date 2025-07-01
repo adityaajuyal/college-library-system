@@ -56,6 +56,23 @@
             color: white;
             padding: 30px;
             text-align: center;
+            position: relative;
+        }
+
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            max-width: 200px;
+            max-height: 80px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            filter: brightness(1.1);
         }
 
         .header h1 {
@@ -405,7 +422,10 @@
     <!-- Main Admin Panel -->
     <div id="adminPanel" class="container" style="display: none;">
         <div class="header">
-            <h1>Sangrachna's Kitabghar - Admin Panel</h1>
+            <div class="logo-container">
+                <img src="/image.png" alt="Sangrachna's Kitabghar" class="logo" id="logo" onerror="handleLogoError()">
+                <h1 id="headerTitle">Sangrachna's Kitabghar - Admin Panel</h1>
+            </div>
             <p>Manage books, requests, and library operations</p>
             <button onclick="logout()" class="btn btn-warning" style="position: absolute; top: 20px; right: 20px;">Logout</button>
         </div>
@@ -571,8 +591,35 @@
             const isLoggedIn = sessionStorage.getItem('adminLoggedIn');
             if (isLoggedIn === 'true') {
                 showAdminPanel();
+                checkLogo();
             }
         });
+
+        // Logo error handling
+        function handleLogoError() {
+            const logo = document.getElementById('logo');
+            const headerTitle = document.getElementById('headerTitle');
+            if (logo) {
+                logo.style.display = 'none';
+            }
+            if (headerTitle) {
+                headerTitle.style.marginTop = '0';
+            }
+        }
+
+        function checkLogo() {
+            const testImg = new Image();
+            testImg.onload = function() {
+                const logo = document.getElementById('logo');
+                if (logo) {
+                    logo.style.display = 'block';
+                }
+            };
+            testImg.onerror = function() {
+                handleLogoError();
+            };
+            testImg.src = '/image.png';
+        }
 
         // Login form submission
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
@@ -613,6 +660,7 @@
             loadRequests();
             loadStats();
             refreshReportStats();
+            checkLogo();
         }
 
         function logout() {
