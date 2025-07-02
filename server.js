@@ -632,6 +632,7 @@ function keepAlive() {
 
 // Initialize and start server
 initializeDataFiles();
+connectDB(); // Connect to MongoDB
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
