@@ -13,34 +13,182 @@
             box-sizing: border-box;
         }
 
+        /* Page Load Animation */
+        .page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
+        }
+
+        .page-loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-content {
+            text-align: center;
+            color: white;
+        }
+
+        .loader-spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(220, 38, 38, 0.3);
+            border-top: 3px solid rgba(220, 38, 38, 1);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        .loader-text {
+            font-size: 1.2rem;
+            font-weight: 500;
+            opacity: 0.9;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Page Entrance Animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .fade-in-delay-1 {
+            animation-delay: 0.3s;
+        }
+
+        .fade-in-delay-2 {
+            animation-delay: 0.6s;
+        }
+
+        .fade-in-delay-3 {
+            animation-delay: 0.9s;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Tab Switch Animation */
+        .tab-content {
+            opacity: 0;
+            transform: translateX(20px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tab-content.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Card Entrance Animation */
+        .card {
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
         body {
             font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 25%, #2d2d2d 50%, #1a1a1a 75%, #000000 100%);
+            background-attachment: fixed;
             min-height: 100vh;
             padding: 20px;
             overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(220, 38, 38, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(128, 128, 128, 0.06) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
         }
 
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.98);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 24px;
+            box-shadow: 
+                0 32px 64px rgba(0,0,0,0.4),
+                0 16px 32px rgba(0,0,0,0.2),
+                inset 0 1px 0 rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
             overflow: hidden;
-            border: 1px solid rgba(200, 200, 200, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(220, 38, 38, 0.5), transparent);
         }
 
         .login-container {
             max-width: 450px;
             margin: 100px auto;
-            background: rgba(255, 255, 255, 0.98);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 24px;
+            box-shadow: 
+                0 32px 64px rgba(0,0,0,0.4),
+                0 16px 32px rgba(0,0,0,0.2),
+                inset 0 1px 0 rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
             padding: 50px;
-            border: 1px solid rgba(200, 200, 200, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(220, 38, 38, 0.5), transparent);
         }
 
         .login-title {
@@ -59,9 +207,9 @@
         }
 
         .header {
-            background: linear-gradient(135deg, #1a1a1a 0%, #333333 50%, #1a1a1a 100%);
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 25%, #333333 50%, #1a1a1a 75%, #000000 100%);
             color: white;
-            padding: 40px;
+            padding: 50px 40px;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -71,12 +219,29 @@
             content: '';
             position: absolute;
             top: 0;
-            left: -50%;
+            left: -100%;
             width: 200%;
             height: 100%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            background: linear-gradient(45deg, 
+                transparent 30%, 
+                rgba(255,255,255,0.1) 50%, 
+                rgba(220, 38, 38, 0.1) 60%,
+                transparent 70%);
             transform: translateX(-100%);
-            animation: shimmer 3s infinite;
+            animation: shimmer 4s infinite;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                rgba(220, 38, 38, 0.8) 0%, 
+                rgba(255, 255, 255, 0.3) 50%, 
+                rgba(220, 38, 38, 0.8) 100%);
         }
 
         @keyframes shimmer {
@@ -153,7 +318,10 @@
         .tab.active {
             background: linear-gradient(135deg, #1a1a1a 0%, #333333 100%);
             color: white;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 
+                0 4px 15px rgba(0, 0, 0, 0.3),
+                0 0 0 2px rgba(220, 38, 38, 0.3);
+            border-bottom: 3px solid rgba(220, 38, 38, 0.8);
         }
 
         .tab-content {
@@ -168,8 +336,19 @@
             font-size: 1.5rem;
             color: #333;
             margin-bottom: 20px;
-            border-bottom: 2px solid #666666;
+            border-bottom: 2px solid rgba(220, 38, 38, 0.7);
             padding-bottom: 10px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(220, 38, 38, 0.8), rgba(220, 38, 38, 0.3));
         }
 
         .cards-grid {
@@ -180,16 +359,40 @@
         }
 
         .card {
-            background: white;
-            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
             padding: 20px;
-            border: 1px solid #e0e0e0;
-            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(220, 220, 220, 0.3);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                rgba(220, 38, 38, 0.3) 0%, 
+                rgba(255, 255, 255, 0.3) 50%, 
+                rgba(220, 38, 38, 0.3) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            box-shadow: 
+                0 8px 25px rgba(0,0,0,0.15),
+                0 4px 15px rgba(220, 38, 38, 0.1);
+        }
+
+        .card:hover::before {
+            opacity: 1;
         }
 
         .card-title {
@@ -218,37 +421,50 @@
         .btn-primary {
             background: linear-gradient(135deg, #1a1a1a 0%, #333333 100%);
             color: white;
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
         .btn-primary:hover {
-            background: linear-gradient(135deg, #333333 0%, #dc2626 100%);
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.8) 0%, #1a1a1a 100%);
+            box-shadow: 0 6px 20px rgba(220, 38, 38, 0.3);
+            transform: translateY(-2px);
         }
 
         .btn-success {
-            background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+            background: linear-gradient(135deg, #220000 0%, #1a1a1a 100%);
             color: white;
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.1);
         }
 
         .btn-success:hover {
-            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.8) 0%, #1a1a1a 100%);
+            box-shadow: 0 6px 20px rgba(220, 38, 38, 0.3);
+            transform: translateY(-2px);
         }
 
         .btn-warning {
             background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
             color: white;
+            box-shadow: 0 4px 15px rgba(107, 114, 128, 0.2);
         }
 
         .btn-warning:hover {
             background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+            transform: translateY(-2px);
         }
 
         .btn-danger {
-            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.9) 0%, rgba(185, 28, 28, 0.9) 100%);
             color: white;
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
         }
 
         .btn-danger:hover {
-            background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
+            background: linear-gradient(135deg, rgba(220, 38, 38, 1) 0%, rgba(153, 27, 27, 1) 100%);
+            box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+            transform: translateY(-2px);
         }
 
         .form-group {
@@ -264,10 +480,19 @@
 
         .form-group input {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
             font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: rgba(220, 38, 38, 0.6);
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+            background: rgba(255, 255, 255, 1);
         }
 
         .form-inline {
@@ -283,8 +508,12 @@
         .table-container {
             overflow-x: auto;
             margin-top: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            box-shadow: 
+                0 8px 25px rgba(0,0,0,0.15),
+                0 4px 10px rgba(220, 38, 38, 0.05);
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
         }
 
         .requests-table {
@@ -302,10 +531,12 @@
         }
 
         .requests-table th {
-            background: #f5f5f5;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             font-weight: bold;
             position: sticky;
             top: 0;
+            border-bottom: 2px solid rgba(220, 38, 38, 0.2);
+            color: #333;
         }
 
         .status {
@@ -316,29 +547,38 @@
         }
 
         .status.pending {
-            background: #fff3cd;
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
             color: #856404;
+            border: 1px solid rgba(133, 100, 4, 0.2);
         }
 
         .status.approved {
-            background: #d4edda;
+            background: linear-gradient(135deg, #d4edda 0%, #a8e6cf 100%);
             color: #155724;
+            border: 1px solid rgba(21, 87, 36, 0.2);
         }
 
         .user-link {
             position: fixed;
             top: 20px;
             right: 20px;
-            background: #4CAF50;
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.9) 0%, rgba(185, 28, 28, 0.9) 100%);
             color: white;
-            padding: 10px 20px;
+            padding: 12px 24px;
             text-decoration: none;
-            border-radius: 5px;
-            transition: background 0.3s;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 1000;
         }
 
         .user-link:hover {
-            background: #45a049;
+            background: linear-gradient(135deg, rgba(220, 38, 38, 1) 0%, rgba(153, 27, 27, 1) 100%);
+            box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+            transform: translateY(-2px);
         }
 
         .message {
@@ -386,6 +626,48 @@
         .stat-label {
             font-size: 0.9rem;
             opacity: 0.9;
+        }
+
+        /* Floating particles animation for ambiance */
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, rgba(220, 38, 38, 0.6) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 6s infinite linear;
+        }
+
+        .particle:nth-child(odd) {
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+            animation-duration: 8s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-10vh) translateX(100px) rotate(360deg);
+                opacity: 0;
+            }
         }
 
         @media (max-width: 768px) {
@@ -447,10 +729,21 @@
     </style>
 </head>
 <body>
+    <!-- Page Loader -->
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-content">
+            <div class="loader-spinner"></div>
+            <div class="loader-text">Loading Admin Panel...</div>
+        </div>
+    </div>
+
+    <!-- Floating particles for ambiance -->
+    <div class="floating-particles" id="particles"></div>
+    
     <a href="/" class="user-link">User Portal</a>
     
     <!-- Login Form -->
-    <div id="loginContainer" class="login-container">
+    <div id="loginContainer" class="login-container fade-in">
         <h2 class="login-title">Sangrachna's Kitabghar - Admin Login</h2>
         <form id="loginForm">
             <div class="form-group">
@@ -467,8 +760,8 @@
     </div>
     
     <!-- Main Admin Panel -->
-    <div id="adminPanel" class="container" style="display: none;">
-        <div class="header">
+    <div id="adminPanel" class="container fade-in" style="display: none;">
+        <div class="header fade-in-delay-1">
             <div class="logo-container">
                 <img src="/image.png" alt="Sangrachna's Kitabghar" class="logo" id="logo" onerror="handleLogoError()">
                 <h1 id="headerTitle">Sangrachna's Kitabghar - Admin Panel</h1>
@@ -632,8 +925,61 @@
         let books = [];
         let requests = [];
 
+        // Create floating particles
+        function createFloatingParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 15; // Fewer particles for admin panel
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 4 + 6) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Page Load Animation
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                const loader = document.getElementById('pageLoader');
+                loader.classList.add('hidden');
+                
+                // Start content animations
+                setTimeout(() => {
+                    initializeAnimations();
+                }, 300);
+            }, 1000);
+        });
+
+        function initializeAnimations() {
+            // Animate cards when they come into view
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.classList.add('visible');
+                        }, index * 100);
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all cards
+            document.querySelectorAll('.card').forEach(card => {
+                observer.observe(card);
+            });
+        }
+
         // Load data on page load
         document.addEventListener('DOMContentLoaded', function() {
+            createFloatingParticles();
+            
             // Check if already logged in
             const isLoggedIn = sessionStorage.getItem('adminLoggedIn');
             if (isLoggedIn === 'true') {
@@ -987,17 +1333,28 @@
         });
 
         function openTab(evt, tabName) {
-            var i, tabcontent, tablinks;
-            tabcontent = document.getElementsByClassName("tab-content");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].classList.remove("active");
-            }
-            tablinks = document.getElementsByClassName("tab");
-            for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].classList.remove("active");
-            }
-            document.getElementById(tabName).classList.add("active");
-            evt.currentTarget.classList.add("active");
+            // Hide all tab contents with smooth animation
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Add active class to clicked tab
+            evt.currentTarget.classList.add('active');
+            
+            // Show selected tab content with delay for smooth transition
+            setTimeout(() => {
+                document.getElementById(tabName).classList.add('active');
+                
+                // Re-initialize animations for new content
+                setTimeout(() => {
+                    initializeAnimations();
+                }, 100);
+            }, 150);
         }
 
         function showMessage(text, type) {

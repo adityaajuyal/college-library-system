@@ -13,29 +13,211 @@
             box-sizing: border-box;
         }
 
+        /* Page Load Animation */
+        .page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
+        }
+
+        .page-loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-content {
+            text-align: center;
+            color: white;
+        }
+
+        .loader-spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(220, 38, 38, 0.3);
+            border-top: 3px solid rgba(220, 38, 38, 1);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        .loader-text {
+            font-size: 1.2rem;
+            font-weight: 500;
+            opacity: 0.9;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Page Entrance Animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .fade-in-delay-1 {
+            animation-delay: 0.2s;
+        }
+
+        .fade-in-delay-2 {
+            animation-delay: 0.4s;
+        }
+
+        .fade-in-delay-3 {
+            animation-delay: 0.6s;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Scroll animations */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Loading state animations */
+        .loading {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.4), 
+                transparent);
+            animation: loading-shimmer 1.5s infinite;
+        }
+
+        @keyframes loading-shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* Enhanced button animations */
+        .btn, .request-btn, .search-button {
+            position: relative;
+            overflow: hidden;
+            transform: translateZ(0);
+        }
+
+        .btn::before, .request-btn::before, .search-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:active::before, .request-btn:active::before, .search-button:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
         body {
             font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 25%, #2d2d2d 50%, #1a1a1a 75%, #000000 100%);
+            background-attachment: fixed;
             min-height: 100vh;
             padding: 20px;
             overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(220, 38, 38, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(128, 128, 128, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.98);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            box-shadow: 
+                0 32px 64px rgba(0,0,0,0.4),
+                0 16px 32px rgba(0,0,0,0.2),
+                inset 0 1px 0 rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
             overflow: hidden;
-            border: 1px solid rgba(200, 200, 200, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            transform: scale(0.9);
+            opacity: 0;
+            animation: containerEntrance 1s ease-out 0.5s forwards;
+        }
+
+        @keyframes containerEntrance {
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(220, 38, 38, 0.5), transparent);
         }
 
         .header {
-            background: linear-gradient(135deg, #1a1a1a 0%, #333333 50%, #1a1a1a 100%);
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 25%, #333333 50%, #1a1a1a 75%, #000000 100%);
             color: white;
-            padding: 40px;
+            padding: 50px 40px;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -45,12 +227,29 @@
             content: '';
             position: absolute;
             top: 0;
-            left: -50%;
+            left: -100%;
             width: 200%;
             height: 100%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            background: linear-gradient(45deg, 
+                transparent 30%, 
+                rgba(255,255,255,0.1) 50%, 
+                rgba(220, 38, 38, 0.1) 60%,
+                transparent 70%);
             transform: translateX(-100%);
-            animation: shimmer 3s infinite;
+            animation: shimmer 4s infinite;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                rgba(220, 38, 38, 0.8) 0%, 
+                rgba(255, 255, 255, 0.3) 50%, 
+                rgba(220, 38, 38, 0.8) 100%);
         }
 
         @keyframes shimmer {
@@ -100,21 +299,41 @@
         }
 
         .collection-notice {
-            background: linear-gradient(135deg, #f8f8f8, #ffffff);
+            background: linear-gradient(135deg, #fafafa 0%, #ffffff 100%);
             border: none;
-            border-left: 5px solid #dc2626;
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 30px;
+            border-left: 4px solid #dc2626;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 40px;
             display: flex;
             align-items: flex-start;
             gap: 20px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.08),
+                0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .collection-notice::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, 
+                rgba(220, 38, 38, 0.3) 0%, 
+                rgba(128, 128, 128, 0.1) 50%, 
+                rgba(220, 38, 38, 0.3) 100%);
         }
 
         .collection-notice:hover {
-            transform: translateY(-2px);
+            transform: translateY(-4px);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.12),
+                0 8px 25px rgba(0, 0, 0, 0.08);
         }
 
         .notice-icon {
@@ -152,83 +371,125 @@
         }
 
         .search-container {
-            margin-bottom: 30px;
+            margin-bottom: 40px;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 15px;
+            gap: 20px;
             position: relative;
+            padding: 30px;
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            border-radius: 20px;
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.06),
+                inset 0 1px 0 rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(0, 0, 0, 0.05);
         }
 
         .search-wrapper {
             position: relative;
             flex: 1;
-            max-width: 500px;
+            max-width: 600px;
         }
 
         .search-icon {
             position: absolute;
-            left: 20px;
+            left: 24px;
             top: 50%;
             transform: translateY(-50%);
-            color: #a0aec0;
-            font-size: 1.1rem;
+            color: #64748b;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            z-index: 2;
         }
 
         .search-input {
             flex: 1;
             width: 100%;
-            padding: 15px 25px 15px 55px;
-            border: 2px solid transparent;
-            border-radius: 50px;
-            font-size: 1rem;
+            padding: 18px 30px 18px 60px;
+            border: 2px solid rgba(0, 0, 0, 0.08);
+            border-radius: 16px;
+            font-size: 1.1rem;
             outline: none;
-            transition: all 0.3s ease;
-            background: white;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 
+                0 4px 20px rgba(0, 0, 0, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            font-weight: 500;
         }
 
         .search-input:focus {
             border-color: #dc2626;
-            box-shadow: 0 4px 20px rgba(220, 38, 38, 0.3);
+            box-shadow: 
+                0 8px 30px rgba(220, 38, 38, 0.15),
+                0 0 0 4px rgba(220, 38, 38, 0.1);
             transform: translateY(-2px);
+            background: rgba(255, 255, 255, 1);
         }
 
         .search-input:focus + .search-icon {
             color: #dc2626;
+            transform: translateY(-50%) scale(1.1);
         }
 
         .search-button {
-            background: linear-gradient(135deg, #1a1a1a 0%, #333333 100%);
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #333333 100%);
             color: white;
             border: none;
-            padding: 15px 30px;
-            border-radius: 50px;
+            padding: 18px 35px;
+            border-radius: 16px;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 600;
-            transition: all 0.3s ease;
-            min-width: 120px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            min-width: 140px;
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .search-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .search-button:hover::before {
+            left: 100%;
         }
 
         .search-button:hover {
-            background: linear-gradient(135deg, #333333 0%, #dc2626 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 50%, #991b1b 100%);
+            transform: translateY(-3px);
+            box-shadow: 
+                0 12px 35px rgba(220, 38, 38, 0.3),
+                0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
         .clear-search {
-            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
             color: white;
             border: none;
-            padding: 15px 25px;
-            border-radius: 50px;
+            padding: 18px 30px;
+            border-radius: 16px;
             cursor: pointer;
-            font-size: 0.95rem;
+            font-size: 1rem;
             font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(107, 114, 128, 0.4);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 6px 20px rgba(100, 116, 139, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
         }
 
         .clear-search:hover {
@@ -250,21 +511,25 @@
 
         .books-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
         }
 
         .book-card {
-            background: white;
-            border-radius: 20px;
-            padding: 25px;
-            border: none;
-            transition: all 0.3s ease;
+            background: linear-gradient(145deg, #ffffff 0%, #fafafa 100%);
+            border-radius: 24px;
+            padding: 30px;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             flex-direction: column;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.08),
+                0 4px 15px rgba(0, 0, 0, 0.04);
             overflow: hidden;
             position: relative;
+            backdrop-filter: blur(10px);
         }
 
         .book-card::before {
@@ -273,19 +538,46 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #1a1a1a, #dc2626);
+            height: 3px;
+            background: linear-gradient(90deg, 
+                #000000 0%, 
+                #1a1a1a 25%, 
+                #dc2626 50%, 
+                #1a1a1a 75%, 
+                #000000 100%);
             transform: scaleX(0);
-            transition: transform 0.3s ease;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 24px 24px 0 0;
+        }
+
+        .book-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(220, 38, 38, 0.03) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.6s ease;
+            pointer-events: none;
         }
 
         .book-card:hover::before {
             transform: scaleX(1);
         }
 
+        .book-card:hover::after {
+            opacity: 1;
+        }
+
         .book-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.15),
+                0 10px 30px rgba(220, 38, 38, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            border-color: rgba(220, 38, 38, 0.1);
         }
 
         .book-image {
@@ -366,19 +658,39 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.5);
+            background-color: rgba(0,0,0,0);
+            backdrop-filter: blur(0px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+        }
+
+        .modal.show {
+            background-color: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            opacity: 1;
         }
 
         .modal-content {
-            background-color: #fefefe;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
             margin: 10% auto;
             padding: 40px;
-            border-radius: 20px;
+            border-radius: 24px;
             width: 90%;
             max-width: 500px;
             position: relative;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-            border: none;
+            box-shadow: 
+                0 32px 64px rgba(0,0,0,0.25),
+                0 16px 32px rgba(0,0,0,0.15),
+                inset 0 1px 0 rgba(255,255,255,0.8);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transform: scale(0.7) translateY(50px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .modal.show .modal-content {
+            transform: scale(1) translateY(0);
+            opacity: 1;
         }
 
         .modal-header {
@@ -641,25 +953,33 @@
     </style>
 </head>
 <body>
+    <!-- Page Loader -->
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-content">
+            <div class="loader-spinner"></div>
+            <div class="loader-text">Loading Sangrachna's Kitabghar...</div>
+        </div>
+    </div>
+
     <!-- Floating particles background -->
     <div class="particles" id="particles"></div>
     
     <a href="/admin" class="admin-link">
         <i class="fas fa-user-shield"></i> Admin Panel
     </a>
-    <div class="container">
-        <div class="header" id="header">
-            <div class="logo-container">
+    <div class="container fade-in">
+        <div class="header fade-in-delay-1" id="header">
+            <div class="logo-container floating">
                 <img src="/image.png" alt="Sangrachna's Kitabghar" class="logo" id="logo" onerror="handleLogoError()">
                 <h1 id="headerTitle">Sangrachna's Kitabghar</h1>
             </div>
             <p>Browse and request books from our collection</p>
         </div>
-        <div class="main-content">
+        <div class="main-content fade-in-delay-2">
             <div id="message" class="message"></div>
             
             <!-- Collection Location Notice -->
-            <div class="collection-notice">
+            <div class="collection-notice floating-delay">
                 <div class="notice-icon">📍</div>
                 <div class="notice-content">
                     <h3>Book Collection Location</h3>
@@ -668,9 +988,9 @@
                 </div>
             </div>
             
-            <div class="books-section">
+            <div class="books-section scroll-reveal">
                 <h2 class="section-title">Available Books</h2>
-                <div class="search-container">
+                <div class="search-container fade-in-delay-3">
                     <div class="search-wrapper">
                         <i class="fas fa-search search-icon"></i>
                         <input type="text" id="searchInput" class="search-input" placeholder="Search books by title or author...">
@@ -748,12 +1068,64 @@
         let filteredBooks = [];
         let isSearching = false;
 
+        // Page Load Animation
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                const loader = document.getElementById('pageLoader');
+                loader.classList.add('hidden');
+                
+                // Start content animations
+                setTimeout(() => {
+                    document.body.style.overflow = 'auto';
+                    initializeAnimations();
+                }, 800);
+            }, 1500);
+        });
+
+        function initializeAnimations() {
+            // Animate book cards when they come into view
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.classList.add('visible');
+                        }, index * 100);
+                    }
+                });
+            }, observerOptions);
+
+            // Scroll reveal observer
+            const scrollObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            // Observe all book cards
+            document.querySelectorAll('.book-card').forEach(card => {
+                observer.observe(card);
+            });
+
+            // Observe scroll reveal elements
+            document.querySelectorAll('.scroll-reveal').forEach(el => {
+                scrollObserver.observe(el);
+            });
+        }
+
         // Load books on page load
         document.addEventListener('DOMContentLoaded', function() {
             loadBooks();
             setMaxDueDate();
             setupSearchEvents();
             checkLogo();
+            createFloatingParticles();
         });
 
         function checkLogo() {
@@ -832,56 +1204,94 @@
         function displayBooks(booksToShow = null) {
             const booksGrid = document.getElementById('booksGrid');
             const noResults = document.getElementById('noResults');
-            booksGrid.innerHTML = '';
             
-            const displayBooks = booksToShow || books;
-            
-            if (displayBooks.length === 0 && isSearching) {
-                noResults.style.display = 'block';
-                return;
-            } else {
-                noResults.style.display = 'none';
-            }
-            
-            displayBooks.forEach((book, index) => {
-                const bookCard = document.createElement('div');
-                bookCard.className = 'book-card';
-                bookCard.style.animationDelay = (index * 0.1) + 's';
-                bookCard.style.animation = 'fadeInUp 0.6s ease forwards';
-                
-                const isAvailable = book.available > 0;
-                const stockBadge = isAvailable 
-                    ? `<span class="stock-badge"><i class="fas fa-check-circle"></i> Available: ${book.available}</span>`
-                    : `<span class="stock-badge"><i class="fas fa-times-circle"></i> Out of Stock</span>`;
-                
-                bookCard.innerHTML = `
-                    <img src="${book.image}" alt="${book.title}" class="book-image" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80'">
-                    <div class="book-title">${book.title}</div>
-                    <div class="book-author"><i class="fas fa-user"></i> ${book.author}</div>
-                    <div class="book-stock ${isAvailable ? 'stock-available' : 'stock-unavailable'}">
-                        ${stockBadge}
-                    </div>
-                    <button class="request-btn" ${!isAvailable ? 'disabled' : ''} 
-                            onclick="openRequestModal(${book.id}, '${book.title}')">
-                        <i class="fas fa-book"></i> ${isAvailable ? 'Request Book' : 'Out of Stock'}
-                    </button>
-                `;
-                booksGrid.appendChild(bookCard);
+            // Fade out existing books
+            const existingBooks = booksGrid.querySelectorAll('.book-card');
+            existingBooks.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.transform = 'scale(0.8)';
+                    card.style.opacity = '0';
+                }, index * 50);
             });
+            
+            setTimeout(() => {
+                booksGrid.innerHTML = '';
+                
+                const displayBooks = booksToShow || books;
+                
+                if (displayBooks.length === 0 && isSearching) {
+                    noResults.style.display = 'block';
+                    return;
+                } else {
+                    noResults.style.display = 'none';
+                }
+                
+                displayBooks.forEach((book, index) => {
+                    const bookCard = document.createElement('div');
+                    bookCard.className = 'book-card';
+                    
+                    const isAvailable = book.available > 0;
+                    const stockBadge = isAvailable 
+                        ? `<span class="stock-badge"><i class="fas fa-check-circle"></i> Available: ${book.available}</span>`
+                        : `<span class="stock-badge"><i class="fas fa-times-circle"></i> Out of Stock</span>`;
+                    
+                    bookCard.innerHTML = `
+                        <img src="${book.image}" alt="${book.title}" class="book-image" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80'">
+                        <div class="book-title">${book.title}</div>
+                        <div class="book-author"><i class="fas fa-user"></i> ${book.author}</div>
+                        <div class="book-stock ${isAvailable ? 'stock-available' : 'stock-unavailable'}">
+                            ${stockBadge}
+                        </div>
+                        <button class="request-btn" ${!isAvailable ? 'disabled' : ''} 
+                                onclick="openRequestModal(${book.id}, '${book.title}')">
+                            <i class="fas fa-book"></i> ${isAvailable ? 'Request Book' : 'Out of Stock'}
+                        </button>
+                    `;
+                    
+                    booksGrid.appendChild(bookCard);
+                    
+                    // Animate book card entrance
+                    setTimeout(() => {
+                        bookCard.classList.add('visible');
+                    }, index * 100);
+                });
+                
+                // Reinitialize observers for new cards
+                setTimeout(() => {
+                    initializeAnimations();
+                }, 100);
+                
+            }, existingBooks.length * 50 + 200);
         }
+
         function openRequestModal(bookId, bookTitle) {
             document.getElementById('bookId').value = bookId;
             document.getElementById('bookTitle').value = bookTitle;
-            document.getElementById('requestModal').style.display = 'block';
+            const modal = document.getElementById('requestModal');
+            modal.style.display = 'block';
+            setTimeout(() => {
+                modal.classList.add('show');
+            }, 10);
         }
+
+        // Close modal with animation
+        function closeModal() {
+            const modal = document.getElementById('requestModal');
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
+        }
+
         // Close modal
         document.querySelector('.close').onclick = function() {
-            document.getElementById('requestModal').style.display = 'none';
+            closeModal();
         }
+
         window.onclick = function(event) {
             const modal = document.getElementById('requestModal');
             if (event.target == modal) {
-                modal.style.display = 'none';
+                closeModal();
             }
         }
         // Handle form submission
@@ -907,7 +1317,7 @@
                 const result = await response.json();
                 if (response.ok) {
                     showMessage(result.message, 'success');
-                    document.getElementById('requestModal').style.display = 'none';
+                    closeModal();
                     this.reset();
                     loadBooks(); // Refresh books
                 } else {
@@ -973,6 +1383,22 @@
                 particle.style.animationDelay = Math.random() * 6 + 's';
                 particle.style.animationDuration = (4 + Math.random() * 4) + 's';
                 
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Enhanced floating particles for better visual appeal
+        function createFloatingParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 25;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                particle.style.animationDuration = (Math.random() * 8 + 8) + 's';
                 particlesContainer.appendChild(particle);
             }
         }
