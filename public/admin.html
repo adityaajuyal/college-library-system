@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Sangrachna's Kitabghar - Admin Panel</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -671,37 +674,125 @@
         }
 
         @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                border-radius: 16px;
+                margin: 0;
+                max-width: 100%;
+            }
+            
+            .login-container {
+                margin: 50px auto;
+                padding: 30px;
+                width: 95%;
+                max-width: 400px;
+                border-radius: 16px;
+            }
+            
+            .login-title {
+                font-size: 1.4rem;
+                margin-bottom: 20px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
             .header h1 {
-                font-size: 2rem;
+                font-size: 1.6rem;
+                margin-bottom: 8px;
+            }
+            
+            .header p {
+                font-size: 0.9rem;
             }
             
             .main-content {
-                padding: 20px;
+                padding: 15px;
             }
             
             .tabs {
                 flex-direction: column;
+                margin-bottom: 20px;
             }
             
             .tab {
                 margin-right: 0;
-                margin-bottom: 5px;
-                border-radius: 5px;
+                margin-bottom: 8px;
+                border-radius: 8px;
+                padding: 12px 20px;
+                font-size: 0.9rem;
+                text-align: center;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .card {
+                padding: 15px;
+                border-radius: 12px;
+            }
+            
+            .card-title {
+                font-size: 1.1rem;
+            }
+            
+            .section-title {
+                font-size: 1.3rem;
+                margin-bottom: 15px;
+            }
+            
+            .form-group {
+                margin-bottom: 15px;
+            }
+            
+            .form-group label {
+                font-size: 0.9rem;
+                margin-bottom: 6px;
+            }
+            
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                padding: 12px;
+                font-size: 1rem;
+                border-radius: 8px;
             }
             
             .form-inline {
                 flex-direction: column;
+                gap: 10px;
+            }
+            
+            .form-inline .form-group {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .btn {
+                padding: 12px 20px;
+                font-size: 0.9rem;
+                border-radius: 8px;
+                width: 100%;
+                margin-bottom: 10px;
             }
             
             .requests-table {
-                font-size: 0.9rem;
+                font-size: 0.8rem;
             }
             
             .table-container {
                 border: 1px solid #ddd;
-                border-radius: 8px;
+                border-radius: 12px;
                 background: white;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
             }
             
             .table-container:after {
@@ -717,13 +808,82 @@
             
             .requests-table th,
             .requests-table td {
-                padding: 8px;
-                font-size: 0.85rem;
+                padding: 8px 6px;
+                font-size: 0.8rem;
+                min-width: 80px;
             }
             
-            .btn {
-                font-size: 0.9rem;
+            .status {
+                padding: 4px 8px;
+                font-size: 0.7rem;
+            }
+            
+            .user-link {
+                top: 15px;
+                right: 15px;
                 padding: 8px 16px;
+                font-size: 0.8rem;
+                border-radius: 20px;
+            }
+            
+            .message {
+                margin: 15px 0;
+                padding: 12px;
+                font-size: 0.9rem;
+                border-radius: 8px;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .stat-card {
+                padding: 15px;
+                border-radius: 12px;
+            }
+            
+            .stat-number {
+                font-size: 1.5rem;
+            }
+            
+            /* Touch-friendly interactions */
+            .tab:hover {
+                transform: none;
+            }
+            
+            .tab:active {
+                transform: scale(0.98);
+            }
+            
+            .btn:hover {
+                transform: none;
+            }
+            
+            .btn:active {
+                transform: scale(0.98);
+            }
+            
+            .card:hover {
+                transform: none;
+            }
+            
+            .card:active {
+                transform: scale(0.98);
+            }
+            
+            /* Better spacing for mobile */
+            .tab-content {
+                padding-top: 10px;
+            }
+            
+            /* Logout button positioning */
+            .header .btn-warning {
+                position: static !important;
+                margin-top: 15px;
+                width: auto;
+                padding: 8px 16px;
+                font-size: 0.9rem;
             }
         }
     </style>
