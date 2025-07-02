@@ -361,6 +361,27 @@
             margin-bottom: 30px;
         }
 
+        .loading-indicator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            text-align: center;
+            color: #666;
+            grid-column: 1 / -1;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(220, 38, 38, 0.3);
+            border-top: 3px solid rgba(220, 38, 38, 1);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
         .card {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 12px;
@@ -390,7 +411,7 @@
         .card:hover {
             transform: translateY(-5px);
             box-shadow: 
-                0 8px 25px rgba(0,0,0,0.15),
+                0 8px 25px rgba(0, 0, 0, 0.15),
                 0 4px 15px rgba(220, 38, 38, 0.1);
         }
 
@@ -674,6 +695,35 @@
         }
 
         @media (max-width: 768px) {
+            /* Disable heavy animations on mobile for faster loading */
+            .page-loader {
+                display: none !important;
+            }
+            
+            .fade-in, .fade-in-delay-1, .fade-in-delay-2, .fade-in-delay-3 {
+                opacity: 1 !important;
+                transform: none !important;
+                animation: none !important;
+            }
+            
+            .tab-content {
+                opacity: 1 !important;
+                transform: none !important;
+                animation: none !important;
+            }
+            
+            .card {
+                opacity: 1 !important;
+                transform: none !important;
+                animation: none !important;
+                visibility: visible !important;
+            }
+            
+            /* Disable particle animations */
+            .particle {
+                display: none !important;
+            }
+            
             body {
                 padding: 10px;
             }
@@ -712,6 +762,15 @@
             
             .main-content {
                 padding: 15px;
+                opacity: 1 !important;
+                transform: none !important;
+                animation: none !important;
+            }
+            
+            .cards-grid {
+                opacity: 1 !important;
+                transform: none !important;
+                animation: none !important;
             }
             
             .tabs {
@@ -731,6 +790,16 @@
             .cards-grid {
                 grid-template-columns: 1fr;
                 gap: 15px;
+                opacity: 1 !important;
+                display: grid !important;
+                visibility: visible !important;
+            }
+            
+            #booksGrid {
+                opacity: 1 !important;
+                display: grid !important;
+                visibility: visible !important;
+                min-height: 200px;
             }
             
             .card {
@@ -949,6 +1018,11 @@
             <div id="books" class="tab-content active">
                 <h2 class="section-title">Books Inventory</h2>
                 <div id="booksGrid" class="cards-grid">
+                    <!-- Loading indicator for admin -->
+                    <div id="adminLoadingIndicator" class="loading-indicator" style="display: block;">
+                        <div class="loading-spinner"></div>
+                        <p>Loading books...</p>
+                    </div>
                     <!-- Books will be loaded here -->
                 </div>
             </div>
@@ -1138,7 +1212,12 @@
 
         // Load data on page load
         document.addEventListener('DOMContentLoaded', function() {
-            createFloatingParticles();
+            // Check if mobile device
+            const isMobile = window.innerWidth <= 768;
+            
+            if (!isMobile) {
+                createFloatingParticles();
+            }
             
             // Check if already logged in
             const isLoggedIn = sessionStorage.getItem('adminLoggedIn');
@@ -1236,13 +1315,21 @@
 
         async function loadBooks() {
             try {
+                console.log('Loading books in admin panel...');
                 const response = await fetch('/api/books');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
                 books = await response.json();
+                console.log('Admin books loaded:', books.length);
                 displayBooks();
                 loadStats();
                 refreshReportStats();
             } catch (error) {
-                showMessage('Failed to load books', 'error');
+                console.error('Error loading books in admin:', error);
+                showMessage('Failed to load books. Please check your connection.', 'error');
             }
         }
 
@@ -1286,11 +1373,26 @@
 
         function displayBooks() {
             const booksGrid = document.getElementById('booksGrid');
+            const isMobile = window.innerWidth <= 768;
+            
+            // Hide loading indicator
+            const loadingIndicator = document.getElementById('adminLoadingIndicator');
+            if (loadingIndicator) {
+                loadingIndicator.style.display = 'none';
+            }
+            
             booksGrid.innerHTML = '';
 
-            books.forEach(book => {
+            books.forEach((book, index) => {
                 const bookCard = document.createElement('div');
                 bookCard.className = 'card';
+                
+                // On mobile, make immediately visible
+                if (isMobile) {
+                    bookCard.style.opacity = '1';
+                    bookCard.style.transform = 'none';
+                    bookCard.style.animation = 'none';
+                }
                 
                 bookCard.innerHTML = `
                     <img src="${book.image}" alt="${book.title}" class="book-image" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80'">
@@ -1315,6 +1417,8 @@
                 
                 booksGrid.appendChild(bookCard);
             });
+            
+            console.log(`Displayed ${books.length} books in admin panel`);
         }
 
         function displayRequests() {
