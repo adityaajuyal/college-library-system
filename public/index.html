@@ -672,7 +672,7 @@
 
         .modal-content {
             background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-            margin: 10% auto;
+            margin: 5% auto 5% auto;
             padding: 40px;
             border-radius: 24px;
             width: 90%;
@@ -686,6 +686,8 @@
             transform: scale(0.7) translateY(50px);
             opacity: 0;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         .modal.show .modal-content {
@@ -911,6 +913,12 @@
             .search-button, .clear-search {
                 width: 100%;
                 max-width: 200px;
+            }
+            .modal-content {
+                margin: 2% auto 2% auto;
+                padding: 25px;
+                width: 95%;
+                max-height: 95vh;
             }
             .admin-link {
                 position: fixed;
