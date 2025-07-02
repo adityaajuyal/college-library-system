@@ -542,34 +542,47 @@ app.post('/api/add-book', async (req, res) => {
 app.delete('/api/delete-book/:id', async (req, res) => {
   try {
     const bookId = parseInt(req.params.id);
-    const books = await readBooks();
-    
-    // Check if book exists
-    const bookIndex = books.findIndex(book => book.id === bookId);
-    if (bookIndex === -1) {
-      return res.status(404).json({ error: 'Book not found' });
+    if (useDatabase) {
+      // MongoDB logic
+      const book = await Book.findOne({ id: bookId });
+      if (!book) {
+        return res.status(404).json({ error: 'Book not found' });
+      }
+      const bookTitle = book.title;
+      // Remove all requests related to this book
+      const relatedRequests = await Request.find({ bookId });
+      await Request.deleteMany({ bookId });
+      // Remove the book
+      await Book.deleteOne({ id: bookId });
+      const deletedRequestsCount = relatedRequests.length;
+      const message = deletedRequestsCount > 0
+        ? `Book "${bookTitle}" deleted successfully! ${deletedRequestsCount} related request(s) were also removed.`
+        : `Book "${bookTitle}" deleted successfully!`;
+      res.json({ message });
+    } else {
+      // JSON fallback
+      const books = await readBooks();
+      // Check if book exists
+      const bookIndex = books.findIndex(book => book.id === bookId);
+      if (bookIndex === -1) {
+        return res.status(404).json({ error: 'Book not found' });
+      }
+      const bookTitle = books[bookIndex].title;
+      // Remove all requests related to this book
+      const requests = await readRequests();
+      const relatedRequests = requests.filter(request => request.bookId === bookId);
+      const updatedRequests = requests.filter(request => request.bookId !== bookId);
+      // Save updated requests (without the deleted book's requests)
+      await writeRequests(updatedRequests);
+      // Remove book from array
+      books.splice(bookIndex, 1);
+      await writeBooks(books);
+      const deletedRequestsCount = relatedRequests.length;
+      const message = deletedRequestsCount > 0
+        ? `Book "${bookTitle}" deleted successfully! ${deletedRequestsCount} related request(s) were also removed.`
+        : `Book "${bookTitle}" deleted successfully!`;
+      res.json({ message });
     }
-    
-    const bookTitle = books[bookIndex].title;
-    
-    // Remove all requests related to this book
-    const requests = await readRequests();
-    const relatedRequests = requests.filter(request => request.bookId === bookId);
-    const updatedRequests = requests.filter(request => request.bookId !== bookId);
-    
-    // Save updated requests (without the deleted book's requests)
-    await writeRequests(updatedRequests);
-    
-    // Remove book from array
-    books.splice(bookIndex, 1);
-    await writeBooks(books);
-    
-    const deletedRequestsCount = relatedRequests.length;
-    const message = deletedRequestsCount > 0 
-      ? `Book "${bookTitle}" deleted successfully! ${deletedRequestsCount} related request(s) were also removed.`
-      : `Book "${bookTitle}" deleted successfully!`;
-    
-    res.json({ message });
   } catch (error) {
     console.error('Error deleting book:', error);
     res.status(500).json({ error: 'Failed to delete book' });
