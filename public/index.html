@@ -512,6 +512,27 @@
             border: 1px solid #e0e0e0;
         }
 
+        .loading-indicator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            text-align: center;
+            color: #666;
+            grid-column: 1 / -1;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(220, 38, 38, 0.3);
+            border-top: 3px solid rgba(220, 38, 38, 1);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
         .books-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -897,6 +918,40 @@
         }
 
         @media (max-width: 768px) {
+            /* Disable animations on mobile for faster loading */
+            .page-loader {
+                display: none !important;
+            }
+            
+            .fade-in, .fade-in-delay-1, .fade-in-delay-2, .fade-in-delay-3 {
+                opacity: 1 !important;
+                transform: none !important;
+                animation: none !important;
+            }
+            
+            .scroll-reveal {
+                opacity: 1 !important;
+                transform: none !important;
+                animation: none !important;
+            }
+            
+            .book-card {
+                opacity: 1 !important;
+                transform: none !important;
+                animation: none !important;
+                visibility: visible !important;
+            }
+            
+            .book-card.visible {
+                opacity: 1 !important;
+                transform: none !important;
+            }
+            
+            /* Disable particle animations */
+            .particle {
+                display: none !important;
+            }
+            
             body {
                 padding: 10px;
             }
@@ -905,6 +960,9 @@
                 border-radius: 16px;
                 margin: 0;
                 max-width: 100%;
+                transform: none !important;
+                opacity: 1 !important;
+                animation: none !important;
             }
             
             .header {
@@ -922,6 +980,15 @@
             
             .main-content {
                 padding: 15px;
+                opacity: 1 !important;
+                transform: none !important;
+                animation: none !important;
+            }
+            
+            .books-section {
+                opacity: 1 !important;
+                transform: none !important;
+                animation: none !important;
             }
             
             .collection-notice {
@@ -941,6 +1008,18 @@
             .books-grid {
                 grid-template-columns: 1fr;
                 gap: 15px;
+                margin-top: 20px;
+                min-height: auto;
+                display: grid !important;
+                opacity: 1 !important;
+                visibility: visible !important;
+            }
+            
+            #booksGrid {
+                opacity: 1 !important;
+                display: grid !important;
+                visibility: visible !important;
+                min-height: 200px;
             }
             
             .book-card {
@@ -1158,6 +1237,11 @@
                     </button>
                 </div>
                 <div id="booksGrid" class="books-grid">
+                    <!-- Loading indicator for mobile -->
+                    <div id="loadingIndicator" class="loading-indicator" style="display: block;">
+                        <div class="loading-spinner"></div>
+                        <p>Loading books...</p>
+                    </div>
                     <!-- Books will be loaded here -->
                 </div>
                 <div id="noResults" class="no-results" style="display: none;">
@@ -1276,11 +1360,17 @@
 
         // Load books on page load
         document.addEventListener('DOMContentLoaded', function() {
+            // Check if mobile device
+            const isMobile = window.innerWidth <= 768;
+            
             loadBooks();
             setMaxDueDate();
             setupSearchEvents();
             checkLogo();
-            createFloatingParticles();
+            
+            if (!isMobile) {
+                createFloatingParticles();
+            }
         });
 
         function checkLogo() {
@@ -1349,27 +1439,66 @@
         }
         async function loadBooks() {
             try {
+                console.log('Loading books...');
                 const response = await fetch('/api/books');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
                 books = await response.json();
+                console.log('Books loaded:', books.length);
                 displayBooks();
             } catch (error) {
-                showMessage('Failed to load books', 'error');
+                console.error('Error loading books:', error);
+                // Show error message but also try to display empty state
+                showMessage('Failed to load books. Please check your connection.', 'error');
+                
+                // Hide loading indicator
+                const loadingIndicator = document.getElementById('loadingIndicator');
+                if (loadingIndicator) {
+                    loadingIndicator.style.display = 'none';
+                }
+                
+                // Show a user-friendly message in the books grid
+                const booksGrid = document.getElementById('booksGrid');
+                booksGrid.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #666;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 10px; color: #dc2626;"></i>
+                        <h3>Unable to Load Books</h3>
+                        <p>Please check your internet connection and try refreshing the page.</p>
+                        <button onclick="location.reload()" style="margin-top: 15px; padding: 10px 20px; background: #dc2626; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                            <i class="fas fa-refresh"></i> Retry
+                        </button>
+                    </div>
+                `;
             }
         }
         function displayBooks(booksToShow = null) {
             const booksGrid = document.getElementById('booksGrid');
             const noResults = document.getElementById('noResults');
+            const isMobile = window.innerWidth <= 768;
             
-            // Fade out existing books
+            // Fade out existing books (skip on mobile)
             const existingBooks = booksGrid.querySelectorAll('.book-card');
-            existingBooks.forEach((card, index) => {
-                setTimeout(() => {
-                    card.style.transform = 'scale(0.8)';
-                    card.style.opacity = '0';
-                }, index * 50);
-            });
+            if (!isMobile) {
+                existingBooks.forEach((card, index) => {
+                    setTimeout(() => {
+                        card.style.transform = 'scale(0.8)';
+                        card.style.opacity = '0';
+                    }, index * 50);
+                });
+            }
+            
+            const animationDelay = isMobile ? 0 : existingBooks.length * 50 + 200;
             
             setTimeout(() => {
+                // Hide loading indicator
+                const loadingIndicator = document.getElementById('loadingIndicator');
+                if (loadingIndicator) {
+                    loadingIndicator.style.display = 'none';
+                }
+                
                 booksGrid.innerHTML = '';
                 
                 const displayBooks = booksToShow || books;
@@ -1384,6 +1513,13 @@
                 displayBooks.forEach((book, index) => {
                     const bookCard = document.createElement('div');
                     bookCard.className = 'book-card';
+                    
+                    // On mobile, make immediately visible
+                    if (isMobile) {
+                        bookCard.style.opacity = '1';
+                        bookCard.style.transform = 'none';
+                        bookCard.classList.add('visible');
+                    }
                     
                     const isAvailable = book.available > 0;
                     const stockBadge = isAvailable 
@@ -1405,18 +1541,22 @@
                     
                     booksGrid.appendChild(bookCard);
                     
-                    // Animate book card entrance
-                    setTimeout(() => {
-                        bookCard.classList.add('visible');
-                    }, index * 100);
+                    // Animate book card entrance (skip on mobile)
+                    if (!isMobile) {
+                        setTimeout(() => {
+                            bookCard.classList.add('visible');
+                        }, index * 100);
+                    }
                 });
                 
-                // Reinitialize observers for new cards
-                setTimeout(() => {
-                    initializeAnimations();
-                }, 100);
+                // Reinitialize observers for new cards (skip on mobile)
+                if (!isMobile) {
+                    setTimeout(() => {
+                        initializeAnimations();
+                    }, 100);
+                }
                 
-            }, existingBooks.length * 50 + 200);
+            }, animationDelay);
         }
 
         function openRequestModal(bookId, bookTitle) {
