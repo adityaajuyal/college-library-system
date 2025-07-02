@@ -65,12 +65,14 @@ EMAIL_ENABLED=false
 
 ### For Render.com:
 ```
-MONGODB_URI=mongodb+srv://libraryAdmin:YOUR_PASSWORD@library-cluster.xxxxx.mongodb.net/library_system?retryWrites=true&w=majority
+MONGODB_URI=mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/library_system?retryWrites=true&w=majority&appName=Cluster0
 NODE_ENV=production
-ADMIN_USERNAME=admin
-ADMIN_PASSWORD=your_secure_password_here
+ADMIN_USERNAME=librarian
+ADMIN_PASSWORD=SecurePassword123!
 EMAIL_USER=your-email@gmail.com
-EMAIL_PASS=your-app-password
+EMAIL_PASS=your-gmail-app-password
+EMAIL_FROM=Sangrachna's Kitabghar <your-email@gmail.com>
+EMAIL_TO=librarian@college.edu
 ```
 
 ### For Railway:
