@@ -257,6 +257,71 @@
             border: 1px solid #f5c6cb;
         }
 
+        /* Pagination Styles */
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 40px 0;
+            gap: 20px;
+        }
+
+        .pagination {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .pagination button {
+            background: linear-gradient(135deg, #1a1a1a 0%, #333333 100%);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            min-width: 44px;
+        }
+
+        .pagination button:hover:not(:disabled) {
+            background: linear-gradient(135deg, #333333 0%, #dc2626 100%);
+            transform: translateY(-1px);
+        }
+
+        .pagination button:disabled {
+            background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .pagination button.active {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+        }
+
+        .pagination-info {
+            color: #666;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .books-per-page {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .books-per-page select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            font-size: 0.9rem;
+        }
+
         /* Mobile responsive */
         @media (max-width: 768px) {
             body {
@@ -304,6 +369,40 @@
             .book-image {
                 height: 200px;
             }
+            
+            /* Mobile pagination styles */
+            .pagination-container {
+                flex-direction: column;
+                gap: 15px;
+                margin: 30px 0;
+            }
+            
+            .pagination {
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 5px;
+            }
+            
+            .pagination button {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+                min-width: 36px;
+            }
+            
+            .books-per-page {
+                justify-content: center;
+                font-size: 0.8rem;
+            }
+            
+            .books-per-page select {
+                padding: 6px 10px;
+                font-size: 0.8rem;
+            }
+            
+            .pagination-info {
+                text-align: center;
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
@@ -338,6 +437,35 @@
                 </div>
             </div>
             
+            <!-- Pagination Controls -->
+            <div class="pagination-container" id="paginationContainer" style="display: none;">
+                <div class="books-per-page">
+                    <label for="booksPerPage">Books per page:</label>
+                    <select id="booksPerPage" onchange="changeBooksPerPage()">
+                        <option value="12">12</option>
+                        <option value="18">18</option>
+                        <option value="24">24</option>
+                        <option value="36">36</option>
+                    </select>
+                </div>
+                
+                <div class="pagination">
+                    <button id="prevBtn" onclick="previousPage()" disabled>
+                        <i class="fas fa-chevron-left"></i> Previous
+                    </button>
+                    
+                    <div id="pageNumbers"></div>
+                    
+                    <button id="nextBtn" onclick="nextPage()">
+                        Next <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                
+                <div class="pagination-info">
+                    <span id="paginationInfo">Showing 1-12 of 45 books</span>
+                </div>
+            </div>
+            
             <div id="noResults" class="no-results" style="display: none;">
                 <h3>No books found</h3>
                 <p>Try different search terms</p>
@@ -349,6 +477,12 @@
         let books = [];
         let filteredBooks = [];
         let isSearching = false;
+        
+        // Pagination variables
+        let currentPage = 1;
+        let booksPerPage = 12;
+        let totalPages = 1;
+        let currentBooks = [];
 
         // Load books on page load
         document.addEventListener('DOMContentLoaded', function() {
@@ -411,6 +545,7 @@
         function displayBooks(booksToShow = null) {
             const booksGrid = document.getElementById('booksGrid');
             const noResults = document.getElementById('noResults');
+            const paginationContainer = document.getElementById('paginationContainer');
             
             // Hide loading indicator
             const loadingIndicator = document.getElementById('loadingIndicator');
@@ -418,20 +553,46 @@
                 loadingIndicator.style.display = 'none';
             }
             
-            const displayBooks = booksToShow || books;
-            console.log(`📚 Displaying ${displayBooks.length} books`);
+            // Set current books for pagination
+            currentBooks = booksToShow || books;
+            console.log(`📚 Total books available: ${currentBooks.length}`);
             
-            if (displayBooks.length === 0 && isSearching) {
+            if (currentBooks.length === 0 && isSearching) {
                 noResults.style.display = 'block';
                 booksGrid.innerHTML = '';
+                paginationContainer.style.display = 'none';
                 return;
             } else {
                 noResults.style.display = 'none';
             }
             
+            // Calculate pagination
+            totalPages = Math.ceil(currentBooks.length / booksPerPage);
+            
+            // Reset to page 1 if current page is out of range
+            if (currentPage > totalPages) {
+                currentPage = 1;
+            }
+            
+            // Show/hide pagination based on number of books
+            if (currentBooks.length > booksPerPage) {
+                paginationContainer.style.display = 'flex';
+                updatePagination();
+            } else {
+                paginationContainer.style.display = 'none';
+            }
+            
+            // Calculate start and end indices for current page
+            const startIndex = (currentPage - 1) * booksPerPage;
+            const endIndex = Math.min(startIndex + booksPerPage, currentBooks.length);
+            const booksOnCurrentPage = currentBooks.slice(startIndex, endIndex);
+            
+            console.log(`📄 Showing page ${currentPage} of ${totalPages} (${booksOnCurrentPage.length} books)`);
+            
+            // Create book cards for current page
             const fragment = document.createDocumentFragment();
             
-            displayBooks.forEach((book, index) => {
+            booksOnCurrentPage.forEach((book, index) => {
                 const bookCard = document.createElement('div');
                 bookCard.className = 'book-card';
                 
@@ -457,7 +618,107 @@
             
             booksGrid.innerHTML = '';
             booksGrid.appendChild(fragment);
-            console.log('✅ Books displayed successfully');
+            
+            // Scroll to top of books section
+            document.getElementById('booksGrid').scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start' 
+            });
+            
+            console.log('✅ Books displayed successfully with pagination');
+        }
+
+        function updatePagination() {
+            const pageNumbers = document.getElementById('pageNumbers');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const paginationInfo = document.getElementById('paginationInfo');
+            
+            // Update navigation buttons
+            prevBtn.disabled = currentPage <= 1;
+            nextBtn.disabled = currentPage >= totalPages;
+            
+            // Clear existing page numbers
+            pageNumbers.innerHTML = '';
+            
+            // Calculate page range to show
+            const maxPagesToShow = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+            let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+            
+            // Adjust start page if we're near the end
+            if (endPage - startPage < maxPagesToShow - 1) {
+                startPage = Math.max(1, endPage - maxPagesToShow + 1);
+            }
+            
+            // Add first page and ellipsis if needed
+            if (startPage > 1) {
+                addPageButton(1);
+                if (startPage > 2) {
+                    const ellipsis = document.createElement('span');
+                    ellipsis.textContent = '...';
+                    ellipsis.style.color = '#666';
+                    ellipsis.style.padding = '10px 8px';
+                    pageNumbers.appendChild(ellipsis);
+                }
+            }
+            
+            // Add page numbers
+            for (let i = startPage; i <= endPage; i++) {
+                addPageButton(i);
+            }
+            
+            // Add last page and ellipsis if needed
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    const ellipsis = document.createElement('span');
+                    ellipsis.textContent = '...';
+                    ellipsis.style.color = '#666';
+                    ellipsis.style.padding = '10px 8px';
+                    pageNumbers.appendChild(ellipsis);
+                }
+                addPageButton(totalPages);
+            }
+            
+            // Update pagination info
+            const startItem = (currentPage - 1) * booksPerPage + 1;
+            const endItem = Math.min(currentPage * booksPerPage, currentBooks.length);
+            paginationInfo.textContent = `Showing ${startItem}-${endItem} of ${currentBooks.length} books`;
+        }
+
+        function addPageButton(pageNum) {
+            const button = document.createElement('button');
+            button.textContent = pageNum;
+            button.onclick = () => goToPage(pageNum);
+            if (pageNum === currentPage) {
+                button.classList.add('active');
+            }
+            document.getElementById('pageNumbers').appendChild(button);
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            displayBooks(currentBooks);
+        }
+
+        function previousPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                displayBooks(currentBooks);
+            }
+        }
+
+        function nextPage() {
+            if (currentPage < totalPages) {
+                currentPage++;
+                displayBooks(currentBooks);
+            }
+        }
+
+        function changeBooksPerPage() {
+            booksPerPage = parseInt(document.getElementById('booksPerPage').value);
+            currentPage = 1; // Reset to first page
+            displayBooks(currentBooks);
         }
 
         function requestBook(bookId, bookTitle) {
@@ -482,6 +743,7 @@
             
             console.log(`🔍 Searching for: "${searchTerm}"`);
             isSearching = true;
+            currentPage = 1; // Reset to first page for search results
             clearBtn.style.display = 'inline-block';
             
             filteredBooks = books.filter(book => {
@@ -499,6 +761,7 @@
             document.getElementById('clearBtn').style.display = 'none';
             document.getElementById('noResults').style.display = 'none';
             isSearching = false;
+            currentPage = 1; // Reset to first page
             filteredBooks = [];
             displayBooks();
         }
