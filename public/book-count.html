@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head><title>Book Count Test</title></head>
+<body>
+<h1>Checking Book Count</h1>
+<div id="result">Loading...</div>
+<script>
+fetch('/api/books')
+.then(response => response.json())
+.then(books => {
+    document.getElementById('result').innerHTML = `
+        <h2>Total Books: ${books.length}</h2>
+        <p>If this is showing 45+ books, that's likely causing the performance issue.</p>
+        <h3>First 5 books:</h3>
+        <ul>
+            ${books.slice(0, 5).map(book => `<li>${book.title} by ${book.author}</li>`).join('')}
+        </ul>
+    `;
+})
+.catch(err => {
+    document.getElementById('result').innerHTML = `Error: ${err.message}`;
+});
+</script>
+</body>
+</html>
