@@ -940,6 +940,72 @@
                 font-size: 0.9rem;
             }
         }
+
+        /* Admin Pagination Styles */
+        .admin-pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 30px 0;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .admin-pagination-container .books-per-page {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .admin-pagination-container .books-per-page select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            font-size: 0.9rem;
+        }
+
+        .admin-pagination-container .pagination {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .admin-pagination-container .pagination button {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            min-width: 44px;
+        }
+
+        .admin-pagination-container .pagination button:hover:not(:disabled) {
+            background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
+            transform: translateY(-1px);
+        }
+
+        .admin-pagination-container .pagination button:disabled {
+            background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .admin-pagination-container .pagination button.active {
+            background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+        }
+
+        .admin-pagination-container .pagination-info {
+            color: #666;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
@@ -1002,6 +1068,36 @@
             <!-- Books Management Tab -->
             <div id="books" class="tab-content active">
                 <h2 class="section-title">Books Inventory</h2>
+                
+                <!-- Admin Pagination Controls -->
+                <div class="admin-pagination-container" id="adminPaginationContainer" style="display: none;">
+                    <div class="books-per-page">
+                        <label for="adminBooksPerPage">Books per page:</label>
+                        <select id="adminBooksPerPage" onchange="changeAdminBooksPerPage()">
+                            <option value="10">10</option>
+                            <option value="20" selected>20</option>
+                            <option value="30">30</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+                    
+                    <div class="pagination">
+                        <button id="adminPrevBtn" onclick="previousAdminPage()" disabled>
+                            <i class="fas fa-chevron-left"></i> Previous
+                        </button>
+                        
+                        <div id="adminPageNumbers"></div>
+                        
+                        <button id="adminNextBtn" onclick="nextAdminPage()">
+                            Next <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="pagination-info">
+                        <span id="adminPaginationInfo">Showing 1-20 of 100 books</span>
+                    </div>
+                </div>
+                
                 <div id="booksGrid" class="cards-grid">
                     <!-- Loading indicator for admin -->
                     <div id="adminLoadingIndicator" class="loading-indicator" style="display: block;">
@@ -1144,6 +1240,11 @@
         let books = [];
         let requests = [];
         let statsLoaded = false; // Track if stats have been loaded to avoid redundant calls
+        
+        // Admin pagination variables
+        let adminCurrentPage = 1;
+        let adminBooksPerPage = 20;
+        let adminTotalPages = 1;
 
         // Create floating particles
         function createFloatingParticles() {
@@ -1358,7 +1459,7 @@
 
         function displayBooks() {
             const booksGrid = document.getElementById('booksGrid');
-            const isMobile = window.innerWidth <= 768;
+            const adminPaginationContainer = document.getElementById('adminPaginationContainer');
             
             // Hide loading indicator
             const loadingIndicator = document.getElementById('adminLoadingIndicator');
@@ -1366,10 +1467,33 @@
                 loadingIndicator.style.display = 'none';
             }
             
+            // Calculate pagination
+            adminTotalPages = Math.ceil(books.length / adminBooksPerPage);
+            
+            // Reset to page 1 if current page is out of range
+            if (adminCurrentPage > adminTotalPages) {
+                adminCurrentPage = 1;
+            }
+            
+            // Show/hide pagination based on number of books
+            if (books.length > adminBooksPerPage) {
+                adminPaginationContainer.style.display = 'flex';
+                updateAdminPagination();
+            } else {
+                adminPaginationContainer.style.display = 'none';
+            }
+            
+            // Calculate start and end indices for current page
+            const startIndex = (adminCurrentPage - 1) * adminBooksPerPage;
+            const endIndex = Math.min(startIndex + adminBooksPerPage, books.length);
+            const booksOnCurrentPage = books.slice(startIndex, endIndex);
+            
+            console.log(`📄 Admin showing page ${adminCurrentPage} of ${adminTotalPages} (${booksOnCurrentPage.length} books)`);
+            
             // Use document fragment for better performance
             const fragment = document.createDocumentFragment();
 
-            books.forEach((book, index) => {
+            booksOnCurrentPage.forEach((book, index) => {
                 const bookCard = document.createElement('div');
                 bookCard.className = 'card';
                 
@@ -1405,7 +1529,7 @@
             booksGrid.innerHTML = '';
             booksGrid.appendChild(fragment);
             
-            console.log(`Displayed ${books.length} books in admin panel`);
+            console.log(`✅ Displayed ${booksOnCurrentPage.length} books in admin panel (page ${adminCurrentPage})`);
         }
 
         function displayRequests() {
@@ -1688,6 +1812,100 @@
                     <strong>Last Updated:</strong> ${new Date().toLocaleString()}
                 </div>
             `;
+        }
+
+        // Admin Pagination Functions
+        function updateAdminPagination() {
+            const pageNumbers = document.getElementById('adminPageNumbers');
+            const prevBtn = document.getElementById('adminPrevBtn');
+            const nextBtn = document.getElementById('adminNextBtn');
+            const paginationInfo = document.getElementById('adminPaginationInfo');
+            
+            // Update navigation buttons
+            prevBtn.disabled = adminCurrentPage <= 1;
+            nextBtn.disabled = adminCurrentPage >= adminTotalPages;
+            
+            // Clear existing page numbers
+            pageNumbers.innerHTML = '';
+            
+            // Calculate page range to show
+            const maxPagesToShow = 5;
+            let startPage = Math.max(1, adminCurrentPage - Math.floor(maxPagesToShow / 2));
+            let endPage = Math.min(adminTotalPages, startPage + maxPagesToShow - 1);
+            
+            // Adjust start page if we're near the end
+            if (endPage - startPage < maxPagesToShow - 1) {
+                startPage = Math.max(1, endPage - maxPagesToShow + 1);
+            }
+            
+            // Add first page and ellipsis if needed
+            if (startPage > 1) {
+                addAdminPageButton(1);
+                if (startPage > 2) {
+                    const ellipsis = document.createElement('span');
+                    ellipsis.textContent = '...';
+                    ellipsis.style.color = '#666';
+                    ellipsis.style.padding = '10px 8px';
+                    pageNumbers.appendChild(ellipsis);
+                }
+            }
+            
+            // Add page numbers
+            for (let i = startPage; i <= endPage; i++) {
+                addAdminPageButton(i);
+            }
+            
+            // Add last page and ellipsis if needed
+            if (endPage < adminTotalPages) {
+                if (endPage < adminTotalPages - 1) {
+                    const ellipsis = document.createElement('span');
+                    ellipsis.textContent = '...';
+                    ellipsis.style.color = '#666';
+                    ellipsis.style.padding = '10px 8px';
+                    pageNumbers.appendChild(ellipsis);
+                }
+                addAdminPageButton(adminTotalPages);
+            }
+            
+            // Update pagination info
+            const startItem = (adminCurrentPage - 1) * adminBooksPerPage + 1;
+            const endItem = Math.min(adminCurrentPage * adminBooksPerPage, books.length);
+            paginationInfo.textContent = `Showing ${startItem}-${endItem} of ${books.length} books`;
+        }
+
+        function addAdminPageButton(pageNum) {
+            const button = document.createElement('button');
+            button.textContent = pageNum;
+            button.onclick = () => goToAdminPage(pageNum);
+            if (pageNum === adminCurrentPage) {
+                button.classList.add('active');
+            }
+            document.getElementById('adminPageNumbers').appendChild(button);
+        }
+
+        function goToAdminPage(page) {
+            adminCurrentPage = page;
+            displayBooks();
+        }
+
+        function previousAdminPage() {
+            if (adminCurrentPage > 1) {
+                adminCurrentPage--;
+                displayBooks();
+            }
+        }
+
+        function nextAdminPage() {
+            if (adminCurrentPage < adminTotalPages) {
+                adminCurrentPage++;
+                displayBooks();
+            }
+        }
+
+        function changeAdminBooksPerPage() {
+            adminBooksPerPage = parseInt(document.getElementById('adminBooksPerPage').value);
+            adminCurrentPage = 1; // Reset to first page
+            displayBooks();
         }
     </script>
 </body>
