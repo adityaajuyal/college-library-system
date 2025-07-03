@@ -15,21 +15,33 @@
 
         body {
             font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #000000 0%, #1a1a1a 25%, #2d2d2d 50%, #1a1a1a 75%, #000000 100%);
-            background-attachment: fixed;
+            background: url('/upscalemedia-transformed.jpeg') no-repeat center center fixed;
+            background-size: cover;
             min-height: 100vh;
             padding: 20px;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.1);
+            z-index: -1;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 24px;
-            box-shadow: 0 32px 64px rgba(0,0,0,0.4);
-            backdrop-filter: blur(20px);
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none;
+            backdrop-filter: none;
+            overflow: visible;
+            border: none;
         }
 
         .header {
@@ -39,10 +51,33 @@
             text-align: center;
         }
 
+        .logo {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            margin-bottom: -30px;
+        }
+
+        .kitabghar-text {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #fef5c2;
+            margin-bottom: 20px;
+            font-family: 'Inter', serif;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
         .header h1 {
             font-size: 3rem;
             margin-bottom: 10px;
             font-weight: 700;
+            display: none; /* Hidden since we're only showing logo */
         }
 
         .header p {
@@ -111,14 +146,14 @@
         }
 
         .book-card {
-            background: linear-gradient(145deg, #ffffff 0%, #fafafa 100%);
+            background: linear-gradient(145deg, #1a1a1a 0%, #000000 100%);
             border-radius: 24px;
             padding: 30px;
-            border: 1px solid rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
         .book-card:hover {
@@ -137,13 +172,13 @@
         .book-title {
             font-size: 1.3rem;
             font-weight: 700;
-            color: #2d3748;
+            color: #ffffff;
             margin-bottom: 10px;
             line-height: 1.4;
         }
 
         .book-author {
-            color: #666;
+            color: #cccccc;
             margin-bottom: 10px;
         }
 
@@ -322,6 +357,130 @@
             font-size: 0.9rem;
         }
 
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0);
+            backdrop-filter: blur(0px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+        }
+
+        .modal.show {
+            background-color: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            margin: 5% auto;
+            padding: 40px;
+            border-radius: 24px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            box-shadow: 
+                0 32px 64px rgba(0,0,0,0.25),
+                0 16px 32px rgba(0,0,0,0.15),
+                inset 0 1px 0 rgba(255,255,255,0.8);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transform: scale(0.7) translateY(50px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal.show .modal-content {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .modal-header h2 {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .modal-header p {
+            color: #718096;
+            font-size: 1rem;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            top: 15px;
+            right: 20px;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #dc2626;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #1a1a1a 0%, #333333 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #333333 0%, #dc2626 100%);
+            transform: translateY(-1px);
+        }
+
         /* Mobile responsive */
         @media (max-width: 768px) {
             body {
@@ -336,8 +495,21 @@
                 padding: 30px 20px;
             }
             
+            .logo {
+                width: 90px;
+                height: 90px;
+                margin-bottom: -25px;
+            }
+            
+            .kitabghar-text {
+                font-size: 1.8rem;
+                margin-bottom: 15px;
+                letter-spacing: 1px;
+            }
+            
             .header h1 {
                 font-size: 2rem;
+                display: none; /* Hidden since we're only showing logo */
             }
             
             .main-content {
@@ -413,7 +585,8 @@
     
     <div class="container">
         <div class="header">
-            <h1>Sangrachna's Kitabghar</h1>
+            <img src="/image.png" alt="Sangrachna's Kitabghar Logo" class="logo">
+            <div class="kitabghar-text">Kitabghar</div>
             <p>Browse and request books from our collection</p>
         </div>
         
@@ -473,6 +646,56 @@
         </div>
     </div>
 
+    <!-- Request Modal -->
+    <div id="requestModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="modal-header">
+                <h2><i class="fas fa-book"></i> Request Book</h2>
+                <p>Fill in the details below to request the book</p>
+            </div>
+            <form id="requestForm">
+                <input type="hidden" id="bookId" name="bookId">
+                <div class="form-group">
+                    <label>Book Title:</label>
+                    <input type="text" id="bookTitle" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="userName">Your Name:</label>
+                    <input type="text" id="userName" name="userName" required>
+                </div>
+                <div class="form-group">
+                    <label for="userEmail">Your Email:</label>
+                    <input type="email" id="userEmail" name="userEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="userPhone">Your Phone Number:</label>
+                    <input type="tel" id="userPhone" name="userPhone" pattern="[0-9]{10}" placeholder="1234567890" required>
+                </div>
+                <div class="form-group">
+                    <label for="userYear">Your Academic Year:</label>
+                    <select id="userYear" name="userYear" required>
+                        <option value="">Select Year</option>
+                        <option value="1st Year">1st Year</option>
+                        <option value="2nd Year">2nd Year</option>
+                        <option value="3rd Year">3rd Year</option>
+                        <option value="4th Year">4th Year</option>
+                        <option value="Graduate">Graduate</option>
+                        <option value="Faculty">Faculty</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="dueDate">Preferred Due Date (within 2 weeks):</label>
+                    <input type="date" id="dueDate" name="dueDate" required>
+                    <small style="color: #666; font-size: 0.9em; margin-top: 5px; display: block;">
+                        Note: Book will be issued on the same day when approved and must be returned by your preferred due date (max 2 weeks).
+                    </small>
+                </div>
+                <button type="submit" class="submit-btn">Submit Request</button>
+            </form>
+        </div>
+    </div>
+
     <script>
         let books = [];
         let filteredBooks = [];
@@ -489,7 +712,58 @@
             console.log('DOM loaded, loading books...');
             loadBooks();
             setupSearchEvents();
+            setupModalEvents();
         });
+
+        function setupModalEvents() {
+            // Close modal events
+            document.querySelector('.close').onclick = function() {
+                closeModal();
+            }
+
+            window.onclick = function(event) {
+                const modal = document.getElementById('requestModal');
+                if (event.target == modal) {
+                    closeModal();
+                }
+            }
+
+            // Handle form submission
+            document.getElementById('requestForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const requestData = {
+                    bookId: formData.get('bookId'),
+                    userName: formData.get('userName'),
+                    userEmail: formData.get('userEmail'),
+                    userPhone: formData.get('userPhone'),
+                    userYear: formData.get('userYear'),
+                    preferredDueDate: formData.get('dueDate')
+                };
+
+                try {
+                    const response = await fetch('/api/request-book', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(requestData)
+                    });
+
+                    const result = await response.json();
+                    if (response.ok) {
+                        showMessage(result.message, 'success');
+                        closeModal();
+                        this.reset();
+                        loadBooks(); // Refresh books to update availability
+                    } else {
+                        showMessage(result.error, 'error');
+                    }
+                } catch (error) {
+                    showMessage('Failed to submit request. Please try again.', 'error');
+                }
+            });
+        }
 
         function setupSearchEvents() {
             const searchInput = document.getElementById('searchInput');
@@ -608,7 +882,7 @@
                         ${isAvailable ? `Available: ${book.available}` : 'Out of Stock'}
                     </div>
                     <button class="request-btn" ${!isAvailable ? 'disabled' : ''} 
-                            onclick="requestBook(${book.id}, '${book.title}')">
+                            onclick="openRequestModal(${book.id}, '${book.title}')">
                         <i class="fas fa-book"></i> ${isAvailable ? 'Request Book' : 'Out of Stock'}
                     </button>
                 `;
@@ -722,14 +996,42 @@
         }
 
         function requestBook(bookId, bookTitle) {
-            // Simple alert for now - can be replaced with modal later
-            const name = prompt(`Request book: ${bookTitle}\n\nPlease enter your name:`);
-            if (name) {
-                const email = prompt('Please enter your email:');
-                if (email) {
-                    alert(`Thank you ${name}! Your request for "${bookTitle}" has been submitted.\nYou will receive a confirmation email at ${email}.`);
-                }
-            }
+            openRequestModal(bookId, bookTitle);
+        }
+
+        function openRequestModal(bookId, bookTitle) {
+            document.getElementById('bookId').value = bookId;
+            document.getElementById('bookTitle').value = bookTitle;
+            setMaxDueDate();
+            const modal = document.getElementById('requestModal');
+            modal.style.display = 'block';
+            setTimeout(() => {
+                modal.classList.add('show');
+            }, 10);
+        }
+
+        // Close modal with animation
+        function closeModal() {
+            const modal = document.getElementById('requestModal');
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
+        }
+
+        function setMaxDueDate() {
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const maxDate = new Date(today);
+            maxDate.setDate(maxDate.getDate() + 14); // Allow up to 2 weeks from today
+            
+            const minDate = tomorrow.toISOString().split('T')[0];
+            const maxDateStr = maxDate.toISOString().split('T')[0];
+            
+            const dueDateInput = document.getElementById('dueDate');
+            dueDateInput.min = minDate;
+            dueDateInput.max = maxDateStr;
         }
 
         function searchBooks() {
