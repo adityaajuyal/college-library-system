@@ -626,6 +626,185 @@ app.get('/api/export-csv', async (req, res) => {
   }
 });
 
+// Automated reminder email system
+function setupReminderSystem() {
+  console.log('📧 Setting up automated reminder email system...');
+  
+  // Check for due books every 6 hours (21,600,000 milliseconds)
+  setInterval(checkAndSendReminders, 6 * 60 * 60 * 1000);
+  
+  // Also check immediately on startup (after 1 minute to allow server to fully start)
+  setTimeout(checkAndSendReminders, 60000);
+}
+
+async function checkAndSendReminders() {
+  try {
+    console.log('🔍 Checking for books due soon...');
+    const requests = await readRequests();
+    const today = new Date();
+    
+    // Filter approved requests that have due dates
+    const approvedRequests = requests.filter(req => 
+      req.status === 'approved' && req.dueDate
+    );
+    
+    for (const request of approvedRequests) {
+      const dueDate = new Date(request.dueDate);
+      const timeDiff = dueDate.getTime() - today.getTime();
+      const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+      
+      // Send reminders 3 days before due date and 1 day before
+      if (daysDiff === 3 || daysDiff === 1) {
+        await sendReminderEmail(request, daysDiff);
+      }
+      
+      // Send overdue notification if book is past due date
+      if (daysDiff < 0) {
+        await sendOverdueEmail(request, Math.abs(daysDiff));
+      }
+    }
+  } catch (error) {
+    console.error('❌ Error checking reminders:', error);
+  }
+}
+
+async function sendReminderEmail(request, daysRemaining) {
+  try {
+    const reminderType = daysRemaining === 3 ? 'early' : 'final';
+    const urgencyLevel = daysRemaining === 1 ? '🚨 URGENT' : '⏰ REMINDER';
+    
+    const mailOptions = {
+      from: ADMIN_EMAIL,
+      to: request.userEmail,
+      subject: `${urgencyLevel}: Book Return Reminder - ${request.bookTitle}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%); border-radius: 16px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.1);">
+          <div style="background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); color: white; padding: 30px; text-align: center;">
+            <h2 style="margin: 0; font-size: 1.8rem;">📚 Book Return Reminder</h2>
+            <p style="margin: 10px 0 0 0; opacity: 0.9;">Sangrachna's Kitabghar</p>
+          </div>
+          
+          <div style="padding: 30px;">
+            <div style="background: ${daysRemaining === 1 ? '#fee2e2' : '#fff7ed'}; padding: 20px; border-radius: 12px; margin-bottom: 25px; border-left: 4px solid ${daysRemaining === 1 ? '#dc2626' : '#f59e0b'};">
+              <h3 style="margin: 0 0 10px 0; color: ${daysRemaining === 1 ? '#dc2626' : '#f59e0b'};">
+                ${daysRemaining === 1 ? '🚨 Final Reminder' : '⏰ Friendly Reminder'}
+              </h3>
+              <p style="margin: 0; font-size: 1.1rem;">
+                Your borrowed book is due in <strong>${daysRemaining} day${daysRemaining > 1 ? 's' : ''}</strong>!
+              </p>
+            </div>
+            
+            <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin-bottom: 25px;">
+              <h3 style="margin: 0 0 15px 0; color: #374151;">📖 Book Details</h3>
+              <p style="margin: 5px 0;"><strong>Title:</strong> ${request.bookTitle}</p>
+              <p style="margin: 5px 0;"><strong>Borrower:</strong> ${request.userName}</p>
+              <p style="margin: 5px 0;"><strong>Due Date:</strong> <span style="color: #dc2626; font-weight: bold;">${new Date(request.dueDate).toLocaleDateString()}</span></p>
+              <p style="margin: 5px 0;"><strong>Academic Year:</strong> ${request.userYear}</p>
+            </div>
+            
+            ${daysRemaining === 1 ? `
+              <div style="background: #fee2e2; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <p style="margin: 0; color: #dc2626; font-weight: bold; text-align: center;">
+                  ⚠️ This is your final reminder! Please return the book tomorrow to avoid late fees.
+                </p>
+              </div>
+            ` : `
+              <div style="background: #f0f9ff; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <p style="margin: 0; color: #0369a1; text-align: center;">
+                  💡 Please plan to return the book by the due date to help other students access it.
+                </p>
+              </div>
+            `}
+            
+            <div style="text-align: center; margin: 25px 0;">
+              <p style="margin: 0 0 15px 0; color: #6b7280;">Return the book to:</p>
+              <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid #e5e7eb;">
+                <p style="margin: 0; font-weight: bold;">📍 College Library</p>
+                <p style="margin: 5px 0 0 0; color: #6b7280;">During library hours: 9:00 AM - 5:00 PM</p>
+              </div>
+            </div>
+          </div>
+          
+          <div style="background: #f9fafb; padding: 20px; text-align: center; border-top: 1px solid #e5e7eb;">
+            <p style="margin: 0; color: #6b7280; font-size: 0.9rem;">
+              Thank you for using Sangrachna's Kitabghar! 📚<br>
+              This is an automated reminder. Please contact the library if you have any questions.
+            </p>
+          </div>
+        </div>
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log(`📧 ${reminderType} reminder sent to ${request.userEmail} for book: ${request.bookTitle} (${daysRemaining} days remaining)`);
+    
+  } catch (error) {
+    console.error(`❌ Failed to send reminder email to ${request.userEmail}:`, error);
+  }
+}
+
+async function sendOverdueEmail(request, daysOverdue) {
+  try {
+    const mailOptions = {
+      from: ADMIN_EMAIL,
+      to: request.userEmail,
+      subject: `🚨 OVERDUE: Book Return Required - ${request.bookTitle}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%); border-radius: 16px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.1);">
+          <div style="background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%); color: white; padding: 30px; text-align: center;">
+            <h2 style="margin: 0; font-size: 1.8rem;">🚨 OVERDUE BOOK NOTICE</h2>
+            <p style="margin: 10px 0 0 0; opacity: 0.9;">Sangrachna's Kitabghar</p>
+          </div>
+          
+          <div style="padding: 30px;">
+            <div style="background: #fee2e2; padding: 20px; border-radius: 12px; margin-bottom: 25px; border-left: 4px solid #dc2626;">
+              <h3 style="margin: 0 0 10px 0; color: #dc2626;">📅 Book Overdue</h3>
+              <p style="margin: 0; font-size: 1.1rem;">
+                Your borrowed book is <strong>${daysOverdue} day${daysOverdue > 1 ? 's' : ''} overdue</strong>!
+              </p>
+            </div>
+            
+            <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin-bottom: 25px;">
+              <h3 style="margin: 0 0 15px 0; color: #374151;">📖 Book Details</h3>
+              <p style="margin: 5px 0;"><strong>Title:</strong> ${request.bookTitle}</p>
+              <p style="margin: 5px 0;"><strong>Borrower:</strong> ${request.userName}</p>
+              <p style="margin: 5px 0;"><strong>Due Date:</strong> <span style="color: #dc2626; font-weight: bold;">${new Date(request.dueDate).toLocaleDateString()}</span></p>
+              <p style="margin: 5px 0;"><strong>Days Overdue:</strong> <span style="color: #dc2626; font-weight: bold;">${daysOverdue}</span></p>
+            </div>
+            
+            <div style="background: #fee2e2; padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+              <h4 style="margin: 0 0 10px 0; color: #dc2626;">⚠️ IMMEDIATE ACTION REQUIRED</h4>
+              <p style="margin: 0; color: #dc2626;">
+                Please return this book immediately to avoid further late fees and maintain your borrowing privileges.
+              </p>
+            </div>
+            
+            <div style="text-align: center; margin: 25px 0;">
+              <p style="margin: 0 0 15px 0; color: #6b7280;">Return the book to:</p>
+              <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid #e5e7eb;">
+                <p style="margin: 0; font-weight: bold;">📍 College Library</p>
+                <p style="margin: 5px 0 0 0; color: #6b7280;">During library hours: 9:00 AM - 5:00 PM</p>
+              </div>
+            </div>
+          </div>
+          
+          <div style="background: #fef2f2; padding: 20px; text-align: center; border-top: 1px solid #fecaca;">
+            <p style="margin: 0; color: #dc2626; font-size: 0.9rem; font-weight: bold;">
+              Please contact the library immediately if you have any issues returning the book.
+            </p>
+          </div>
+        </div>
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log(`🚨 Overdue notice sent to ${request.userEmail} for book: ${request.bookTitle} (${daysOverdue} days overdue)`);
+    
+  } catch (error) {
+    console.error(`❌ Failed to send overdue email to ${request.userEmail}:`, error);
+  }
+}
+
 // Self-ping to prevent Render from sleeping (only in production)
 function keepAlive() {
   if (process.env.NODE_ENV === 'production' && process.env.RENDER_EXTERNAL_URL) {
@@ -657,4 +836,7 @@ app.listen(PORT, () => {
   
   // Start keep-alive pings
   keepAlive();
+  
+  // Setup reminder email system
+  setupReminderSystem();
 });
