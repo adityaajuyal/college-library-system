@@ -536,43 +536,269 @@
                 padding: 20px;
             }
             
-            .book-image {
-                height: 200px;
+            .recommendations-section {
+                margin-top: 30px;
+                padding: 20px;
+                border-radius: 16px;
+                background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
             }
             
-            /* Mobile pagination styles */
-            .pagination-container {
-                flex-direction: column;
-                gap: 15px;
-                margin: 30px 0;
-            }
-            
-            .pagination {
-                justify-content: center;
-                flex-wrap: wrap;
-                gap: 5px;
-            }
-            
-            .pagination button {
-                padding: 8px 12px;
-                font-size: 0.8rem;
-                min-width: 36px;
-            }
-            
-            .books-per-page {
-                justify-content: center;
-                font-size: 0.8rem;
-            }
-            
-            .books-per-page select {
-                padding: 6px 10px;
-                font-size: 0.8rem;
-            }
-            
-            .pagination-info {
+            .section-header {
+                margin-bottom: 20px;
                 text-align: center;
-                font-size: 0.8rem;
             }
+            
+            .section-header h3 {
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: #fef5c2;
+                margin-bottom: 10px;
+            }
+            
+            .section-header p {
+                color: #cbd5e1;
+                font-size: 0.9rem;
+            }
+            
+            .recommendations-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+                gap: 15px;
+            }
+        }
+
+        /* AI Features Styles */
+        .recommendations-section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .section-header h3 {
+            color: #fef5c2;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .section-header p {
+            color: #cbd5e1;
+            font-size: 1rem;
+        }
+
+        .recommendations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .recommendation-card {
+            background: linear-gradient(145deg, #1a1a1a 0%, #000000 100%);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .recommendation-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 30px rgba(220, 38, 38, 0.2);
+        }
+
+        .recommendation-card .book-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .recommendation-card .book-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .recommendation-card .book-author {
+            color: #cccccc;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .ai-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        /* Chatbot Styles */
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .chatbot-toggle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 20px rgba(220, 38, 38, 0.4);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chatbot-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(220, 38, 38, 0.6);
+        }
+
+        .chatbot-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 350px;
+            height: 500px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chatbot-header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #333333 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .chatbot-header h4 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .chatbot-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .chat-message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .chat-message.bot {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            color: #334155;
+            align-self: flex-start;
+            border-bottom-left-radius: 6px;
+        }
+
+        .chat-message.user {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 6px;
+        }
+
+        .chatbot-input-container {
+            padding: 20px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            gap: 10px;
+        }
+
+        .chatbot-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            outline: none;
+            font-size: 0.9rem;
+        }
+
+        .chatbot-input:focus {
+            border-color: #dc2626;
+        }
+
+        .chatbot-send {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .quick-action {
+            background: rgba(220, 38, 38, 0.1);
+            color: #dc2626;
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quick-action:hover {
+            background: #dc2626;
+            color: white;
         }
     </style>
 </head>
@@ -591,10 +817,22 @@
         <div class="main-content">
             <div id="message" class="message"></div>
             
+            <!-- Recommendations Section -->
+            <div id="recommendationsSection" class="recommendations-section" style="display: none;">
+                <div class="section-header">
+                    <h3><i class="fas fa-star"></i> Recommendations for You</h3>
+                    <p>Books you might like based on popular choices</p>
+                </div>
+                <div id="recommendationsGrid" class="recommendations-grid"></div>
+            </div>
+            
             <div class="search-container">
-                <input type="text" id="searchInput" class="search-input" placeholder="Search books by title or author...">
-                <button onclick="searchBooks()" class="search-button">
-                    <i class="fas fa-search"></i> Search
+                <input type="text" id="searchInput" class="search-input" placeholder="Try: 'books about programming' or 'novels by Indian authors'...">
+                <button onclick="smartSearch()" class="search-button">
+                    <i class="fas fa-brain"></i> AI Search
+                </button>
+                <button onclick="searchBooks()" class="search-button" style="margin-left: 10px;">
+                    <i class="fas fa-search"></i> Normal Search
                 </button>
                 <button onclick="clearSearch()" class="clear-search" id="clearBtn">
                     <i class="fas fa-times"></i> Clear
@@ -640,6 +878,38 @@
             <div id="noResults" class="no-results" style="display: none;">
                 <h3>No books found</h3>
                 <p>Try different search terms</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Chatbot Widget -->
+    <div class="chatbot-container">
+        <button class="chatbot-toggle" onclick="toggleChatbot()">
+            <i class="fas fa-comments"></i>
+        </button>
+        
+        <div class="chatbot-window" id="chatbotWindow">
+            <div class="chatbot-header">
+                <h4><i class="fas fa-robot"></i> Kitabghar AI Assistant</h4>
+                <button class="chatbot-close" onclick="toggleChatbot()">×</button>
+            </div>
+            
+            <div class="chatbot-messages" id="chatbotMessages">
+                <div class="chat-message bot">
+                    Hello! I'm your AI library assistant. I can help you find books, answer questions about the library, or assist with book requests. What would you like to know?
+                    <div class="quick-actions">
+                        <span class="quick-action" onclick="sendQuickMessage('How do I request a book?')">How to request?</span>
+                        <span class="quick-action" onclick="sendQuickMessage('Show me programming books')">Programming books</span>
+                        <span class="quick-action" onclick="sendQuickMessage('Library hours?')">Library hours</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chatbot-input-container">
+                <input type="text" class="chatbot-input" id="chatbotInput" placeholder="Ask me anything..." onkeypress="handleChatKeyPress(event)">
+                <button class="chatbot-send" onclick="sendChatMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
             </div>
         </div>
     </div>
@@ -711,56 +981,241 @@
             loadBooks();
             setupSearchEvents();
             setupModalEvents();
+            initializeAI();
         });
 
-        function setupModalEvents() {
-            // Close modal events
-            document.querySelector('.close').onclick = function() {
-                closeModal();
+        // AI Features
+        let userBrowsingHistory = [];
+        let chatbotOpen = false;
+
+        function initializeAI() {
+            console.log('🤖 Initializing AI features...');
+            loadRecommendations();
+            initializeChatbot();
+        }
+
+        async function loadRecommendations() {
+            try {
+                // For now, show popular books as recommendations
+                // In a real implementation, this would use AI/ML algorithms
+                const response = await fetch('/api/books');
+                const allBooks = await response.json();
+                
+                // Simple algorithm: show books with highest availability (most popular)
+                const recommendations = allBooks
+                    .filter(book => book.available > 0)
+                    .sort((a, b) => b.available - a.available)
+                    .slice(0, 4);
+                
+                displayRecommendations(recommendations);
+            } catch (error) {
+                console.error('Failed to load recommendations:', error);
             }
+        }
 
-            window.onclick = function(event) {
-                const modal = document.getElementById('requestModal');
-                if (event.target == modal) {
-                    closeModal();
-                }
-            }
-
-            // Handle form submission
-            document.getElementById('requestForm').addEventListener('submit', async function(e) {
-                e.preventDefault();
-                const formData = new FormData(this);
-                const requestData = {
-                    bookId: formData.get('bookId'),
-                    userName: formData.get('userName'),
-                    userEmail: formData.get('userEmail'),
-                    userPhone: formData.get('userPhone'),
-                    userYear: formData.get('userYear'),
-                    preferredDueDate: formData.get('dueDate')
-                };
-
-                try {
-                    const response = await fetch('/api/request-book', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(requestData)
-                    });
-
-                    const result = await response.json();
-                    if (response.ok) {
-                        showMessage(result.message, 'success');
-                        closeModal();
-                        this.reset();
-                        loadBooks(); // Refresh books to update availability
-                    } else {
-                        showMessage(result.error, 'error');
-                    }
-                } catch (error) {
-                    showMessage('Failed to submit request. Please try again.', 'error');
-                }
+        function displayRecommendations(recommendations) {
+            if (recommendations.length === 0) return;
+            
+            const section = document.getElementById('recommendationsSection');
+            const grid = document.getElementById('recommendationsGrid');
+            
+            grid.innerHTML = '';
+            
+            recommendations.forEach(book => {
+                const card = document.createElement('div');
+                card.className = 'recommendation-card';
+                card.onclick = () => openRequestModal(book.id, book.title);
+                
+                card.innerHTML = `
+                    <div class="ai-badge">Recommended</div>
+                    <img src="${book.image}" alt="${book.title}" class="book-image" 
+                         onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80'">
+                    <div class="book-title">${book.title}</div>
+                    <div class="book-author"><i class="fas fa-user"></i> ${book.author}</div>
+                    <div style="color: #4CAF50; font-size: 0.9rem; margin-top: 10px;">
+                        <i class="fas fa-thumbs-up"></i> Popular choice
+                    </div>
+                `;
+                
+                grid.appendChild(card);
             });
+            
+            section.style.display = 'block';
+            console.log('✅ AI recommendations loaded');
+        }
+
+        function smartSearch() {
+            const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+            
+            if (searchTerm === '') {
+                showMessage('Please enter a search term for AI search', 'error');
+                return;
+            }
+            
+            console.log(`🧠 AI Smart Search for: "${searchTerm}"`);
+            
+            // Enhanced search with natural language understanding
+            const aiFilteredBooks = books.filter(book => {
+                const title = book.title.toLowerCase();
+                const author = book.author.toLowerCase();
+                
+                // Basic NLP-style matching
+                if (searchTerm.includes('programming') || searchTerm.includes('coding') || searchTerm.includes('computer')) {
+                    return title.includes('programming') || title.includes('javascript') || title.includes('python') || 
+                           title.includes('java') || title.includes('coding') || title.includes('computer');
+                }
+                
+                if (searchTerm.includes('novel') || searchTerm.includes('fiction') || searchTerm.includes('story')) {
+                    return title.includes('novel') || title.includes('fiction') || title.includes('story') ||
+                           author.includes('rowling') || author.includes('tolkien');
+                }
+                
+                if (searchTerm.includes('science') || searchTerm.includes('physics') || searchTerm.includes('chemistry')) {
+                    return title.includes('science') || title.includes('physics') || title.includes('chemistry') ||
+                           title.includes('biology') || title.includes('math');
+                }
+                
+                if (searchTerm.includes('business') || searchTerm.includes('management') || searchTerm.includes('entrepreneur')) {
+                    return title.includes('business') || title.includes('management') || title.includes('entrepreneur') ||
+                           title.includes('startup') || title.includes('leadership');
+                }
+                
+                // Fall back to regular search
+                return title.includes(searchTerm) || author.includes(searchTerm);
+            });
+            
+            isSearching = true;
+            currentPage = 1;
+            document.getElementById('clearBtn').style.display = 'inline-block';
+            
+            console.log(`🎯 AI found ${aiFilteredBooks.length} relevant books`);
+            
+            if (aiFilteredBooks.length > 0) {
+                showMessage(`AI found ${aiFilteredBooks.length} relevant books using smart search!`, 'success');
+            }
+            
+            displayBooks(aiFilteredBooks);
+        }
+
+        // Chatbot Functions
+        function initializeChatbot() {
+            console.log('🤖 Chatbot initialized');
+        }
+
+        function toggleChatbot() {
+            const window = document.getElementById('chatbotWindow');
+            chatbotOpen = !chatbotOpen;
+            
+            if (chatbotOpen) {
+                window.style.display = 'flex';
+                document.getElementById('chatbotInput').focus();
+            } else {
+                window.style.display = 'none';
+            }
+        }
+
+        function handleChatKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendChatMessage();
+            }
+        }
+
+        function sendQuickMessage(message) {
+            document.getElementById('chatbotInput').value = message;
+            sendChatMessage();
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chatbotInput');
+            const message = input.value.trim();
+            
+            if (message === '') return;
+            
+            addChatMessage(message, 'user');
+            input.value = '';
+            
+            // Simulate AI response
+            setTimeout(() => {
+                const response = generateAIResponse(message.toLowerCase());
+                addChatMessage(response, 'bot');
+            }, 1000);
+        }
+
+        function addChatMessage(message, sender) {
+            const messagesContainer = document.getElementById('chatbotMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${sender}`;
+            messageDiv.innerHTML = message;
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function generateAIResponse(message) {
+            // Simple rule-based chatbot responses
+            if (message.includes('request') || message.includes('borrow')) {
+                return `To request a book:<br>
+                1. Find the book you want<br>
+                2. Click "Request Book" button<br>
+                3. Fill in your details<br>
+                4. Wait for admin approval<br>
+                The admin will email you when it's ready for pickup!`;
+            }
+            
+            if (message.includes('programming') || message.includes('coding')) {
+                return `I found several programming books! Try searching for "JavaScript", "Python", or "Data Structures". You can also use our AI search for better results - just type "programming books" and click AI Search!`;
+            }
+            
+            if (message.includes('hours') || message.includes('time') || message.includes('open')) {
+                return `Our library is typically open:<br>
+                📅 Monday-Friday: 9:00 AM - 6:00 PM<br>
+                📅 Saturday: 10:00 AM - 4:00 PM<br>
+                📅 Sunday: Closed<br>
+                Please check with the admin for current hours!`;
+            }
+            
+            if (message.includes('return') || message.includes('due')) {
+                return `Book return information:<br>
+                📚 You can keep books for up to 2 weeks<br>
+                📧 You'll get email reminders before due date<br>
+                ⚠️ Late returns may result in penalties<br>
+                📍 Return books to the library front desk`;
+            }
+            
+            if (message.includes('fine') || message.includes('penalty')) {
+                return `Library fines:<br>
+                💰 Late return: ₹5 per day<br>
+                📖 Damaged book: Replacement cost<br>
+                📚 Lost book: Full replacement cost<br>
+                Contact the librarian for fine details!`;
+            }
+            
+            if (message.includes('recommend') || message.includes('suggest')) {
+                return `I'd be happy to recommend books! Check out our Recommendations section above, or tell me what topics interest you. For example:<br>
+                • "I like mystery novels"<br>
+                • "Show me business books"<br>
+                • "I need study materials for computer science"`;
+            }
+            
+            // Default responses
+            const defaultResponses = [
+                `I can help you with:<br>
+                📚 Finding books<br>
+                📝 Request procedures<br>
+                ⏰ Library hours<br>
+                💡 Book recommendations<br>
+                What would you like to know?`,
+                
+                `Try asking me about:<br>
+                • How to request books<br>
+                • Library policies<br>
+                • Book recommendations<br>
+                • Search tips`,
+                
+                `I'm here to help! You can ask me about books, library services, or use our AI search feature for smarter results.`
+            ];
+            
+            return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
         }
 
         function setupSearchEvents() {
@@ -900,6 +1355,53 @@
             console.log('✅ Books displayed successfully with pagination');
         }
 
+        function searchBooks() {
+            const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+            const clearBtn = document.getElementById('clearBtn');
+            
+            if (searchTerm === '') {
+                clearSearch();
+                return;
+            }
+            
+            console.log(`🔍 Regular search for: "${searchTerm}"`);
+            isSearching = true;
+            currentPage = 1; // Reset to first page for search results
+            clearBtn.style.display = 'inline-block';
+            
+            // Enhanced search with fuzzy matching
+            filteredBooks = books.filter(book => {
+                const title = book.title.toLowerCase();
+                const author = book.author.toLowerCase();
+                
+                // Exact matches get priority
+                if (title.includes(searchTerm) || author.includes(searchTerm)) {
+                    return true;
+                }
+                
+                // Fuzzy matching for common misspellings or partial matches
+                const searchWords = searchTerm.split(' ');
+                return searchWords.some(word => {
+                    if (word.length < 3) return false;
+                    return title.includes(word) || author.includes(word);
+                });
+            });
+            
+            console.log(`📊 Found ${filteredBooks.length} matching books`);
+            displayBooks(filteredBooks);
+        }
+
+        function clearSearch() {
+            console.log('🧹 Clearing search');
+            document.getElementById('searchInput').value = '';
+            document.getElementById('clearBtn').style.display = 'none';
+            document.getElementById('noResults').style.display = 'none';
+            isSearching = false;
+            currentPage = 1; // Reset to first page
+            filteredBooks = [];
+            displayBooks();
+        }
+
         function updatePagination() {
             const pageNumbers = document.getElementById('pageNumbers');
             const prevBtn = document.getElementById('prevBtn');
@@ -1032,38 +1534,54 @@
             dueDateInput.max = maxDateStr;
         }
 
-        function searchBooks() {
-            const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
-            const clearBtn = document.getElementById('clearBtn');
-            
-            if (searchTerm === '') {
-                clearSearch();
-                return;
+        function setupModalEvents() {
+            // Close modal events
+            document.querySelector('.close').onclick = function() {
+                closeModal();
             }
-            
-            console.log(`🔍 Searching for: "${searchTerm}"`);
-            isSearching = true;
-            currentPage = 1; // Reset to first page for search results
-            clearBtn.style.display = 'inline-block';
-            
-            filteredBooks = books.filter(book => {
-                return book.title.toLowerCase().includes(searchTerm) || 
-                       book.author.toLowerCase().includes(searchTerm);
-            });
-            
-            console.log(`📊 Found ${filteredBooks.length} matching books`);
-            displayBooks(filteredBooks);
-        }
 
-        function clearSearch() {
-            console.log('🧹 Clearing search');
-            document.getElementById('searchInput').value = '';
-            document.getElementById('clearBtn').style.display = 'none';
-            document.getElementById('noResults').style.display = 'none';
-            isSearching = false;
-            currentPage = 1; // Reset to first page
-            filteredBooks = [];
-            displayBooks();
+            window.onclick = function(event) {
+                const modal = document.getElementById('requestModal');
+                if (event.target == modal) {
+                    closeModal();
+                }
+            }
+
+            // Handle form submission
+            document.getElementById('requestForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const requestData = {
+                    bookId: formData.get('bookId'),
+                    userName: formData.get('userName'),
+                    userEmail: formData.get('userEmail'),
+                    userPhone: formData.get('userPhone'),
+                    userYear: formData.get('userYear'),
+                    preferredDueDate: formData.get('dueDate')
+                };
+
+                try {
+                    const response = await fetch('/api/request-book', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(requestData)
+                    });
+
+                    const result = await response.json();
+                    if (response.ok) {
+                        showMessage(result.message, 'success');
+                        closeModal();
+                        this.reset();
+                        loadBooks(); // Refresh books to update availability
+                    } else {
+                        showMessage(result.error, 'error');
+                    }
+                } catch (error) {
+                    showMessage('Failed to submit request. Please try again.', 'error');
+                }
+            });
         }
 
         function showMessage(text, type) {
